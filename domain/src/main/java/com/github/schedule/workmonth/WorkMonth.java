@@ -28,9 +28,9 @@ class WorkMonth extends AggregateRoot<UUID, WorkMonthEvent> {
 
     static WorkMonth create(UUID id, WorkDate workDate) {
         final LocalDate startingDate = LocalDate.of(workDate.year(), workDate.month(), 1);
-        final WorkMonth workMonth = new WorkMonth(id, startingDate, generateWorkDays(startingDate, startingDate.withDayOfMonth(startingDate.lengthOfMonth())), new ArrayList<>());
-        final WorkDate workMonthDate = new WorkDate(workMonth.startingDate.getYear(), workMonth.startingDate.getMonth().getValue());
-        workMonth.registerEvent(new WorkMonthCreatedEvent(workMonth.id, workMonthDate, workMonth.workDays));
+        final LocalDate endingDate = startingDate.withDayOfMonth(startingDate.lengthOfMonth());
+        final WorkMonth workMonth = new WorkMonth(id, startingDate, generateWorkDays(startingDate, endingDate), new ArrayList<>());
+        workMonth.registerEvent(new WorkMonthCreatedEvent(workMonth.id, workMonth.startingDate, workMonth.endingDate, workMonth.workDays));
         return workMonth;
     }
 
