@@ -34,6 +34,12 @@ public record WorkDay(LocalDate date, WorkHour startingHour, WorkHour endingHour
         return this.date.isEqual(date);
     }
 
+    public boolean contentChanged(WorkDay another) {
+        return !this.startingHour.equals(another.startingHour) ||
+                !this.endingHour.equals(another.endingHour) ||
+                this.isLeave != another.isLeave;
+    }
+
     private void checkWorkHour(WorkHour workHour) {
         if(!(workHour.notLesserThan(STARTING_HOUR) && workHour.notGreaterThan(ENDING_HOUR))) {
             throw new WorkHourInvalidException();
