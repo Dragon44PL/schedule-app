@@ -122,5 +122,51 @@ class WorkDayTest {
         assertFalse(workDay.notGreaterThan(WORKDAY_DATE.minusDays(1)));
     }
 
+    @Test
+    @DisplayName("'contentChanged' Should Be False When Nothing Changed")
+    void workDaysChangedShouldBeFalseWhenNothingChanged() {
+        final WorkDay workDay = new WorkDay(WORKDAY_DATE, WORKDAY_IS_LEAVE);
+        assertFalse(workDay.contentChanged(workDay));
+    }
+
+    @Test
+    @DisplayName("'contentChanged' Should Be True When 'isLeave' Changed")
+    void workDaysChangedShouldBeTrueWhenIsLeaveChanged() {
+        final WorkDay workDay = new WorkDay(WORKDAY_DATE, WORKDAY_IS_LEAVE);
+        final WorkDay another = new WorkDay(WORKDAY_DATE, !WORKDAY_IS_LEAVE);
+        assertTrue(workDay.contentChanged(another));
+    }
+
+    @Test
+    @DisplayName("'contentChanged' Should Be True When 'startingHour' Changed")
+    void workDaysChangedShouldBeTrueWhenStartingHourChanged() {
+        final WorkDay workDay = new WorkDay(WORKDAY_DATE, WORKDAY_IS_LEAVE);
+        final WorkDay another = new WorkDay(WORKDAY_DATE, new WorkHour(1, 0), new WorkHour(0, 0), WORKDAY_IS_LEAVE);
+        assertTrue(workDay.contentChanged(another));
+    }
+
+    @Test
+    @DisplayName("'contentChanged' Should Be True When 'endingHour' Changed")
+    void workDaysChangedShouldBeTrueWhenEndingHourChanged() {
+        final WorkDay workDay = new WorkDay(WORKDAY_DATE, WORKDAY_IS_LEAVE);
+        final WorkDay another = new WorkDay(WORKDAY_DATE, new WorkHour(0, 0), new WorkHour(1, 0), WORKDAY_IS_LEAVE);
+        assertTrue(workDay.contentChanged(another));
+    }
+
+    @Test
+    @DisplayName("'contentChanged' Should Be True When Both Hours Changed")
+    void workDaysChangedShouldBeTrueWhenBothHoursChanged() {
+        final WorkDay workDay = new WorkDay(WORKDAY_DATE, WORKDAY_IS_LEAVE);
+        final WorkDay another = new WorkDay(WORKDAY_DATE, new WorkHour(1, 0), new WorkHour(1, 0), WORKDAY_IS_LEAVE);
+        assertTrue(workDay.contentChanged(another));
+    }
+
+    @Test
+    @DisplayName("'Changed' Should Be True When Both Hours Changed")
+    void workDaysChangedShouldBeTrueWhenEverythingChanged() {
+        final WorkDay workDay = new WorkDay(WORKDAY_DATE, WORKDAY_IS_LEAVE);
+        final WorkDay another = new WorkDay(WORKDAY_DATE, new WorkHour(1, 0), new WorkHour(1, 0), !WORKDAY_IS_LEAVE);
+        assertTrue(workDay.contentChanged(another));
+    }
 
 }
