@@ -21,6 +21,11 @@ class WorkMonth extends AggregateRoot<UUID, WorkMonthEvent> {
     private final LocalDate endingDate;
     private final Set<WorkDay> workDays;
 
+    static WorkMonth restore(UUID id, WorkDate workDate, Set<WorkDay> workDays, List<WorkMonthEvent> events) throws WorkDayInvalidException {
+        final LocalDate startingDate = LocalDate.of(workDate.year(), workDate.month(), 1);
+        return new WorkMonth(id, startingDate, workDays, events);
+    }
+
     static WorkMonth restore(UUID id, WorkDate workDate, Set<WorkDay> workDays) throws WorkDayInvalidException {
         final LocalDate startingDate = LocalDate.of(workDate.year(), workDate.month(), 1);
         return new WorkMonth(id, startingDate, workDays, new ArrayList<>());
@@ -30,7 +35,7 @@ class WorkMonth extends AggregateRoot<UUID, WorkMonthEvent> {
         final LocalDate startingDate = LocalDate.of(workDate.year(), workDate.month(), 1);
         final LocalDate endingDate = startingDate.withDayOfMonth(startingDate.lengthOfMonth());
         final WorkMonth workMonth = new WorkMonth(id, startingDate, generateWorkDays(startingDate, endingDate), new ArrayList<>());
-        workMonth.registerEvent(new WorkMonthCreatedEvent(workMonth.id, workMonth.startingDate, workMonth.endingDate, workMonth.workDays));
+        workMonth.registerEvent(new WorkMonthCreatedEvent(workMonth.id, workMonth.startingDate, workMonth.endingDate, WorkHour.zero(), workMonth.workDays));
         return workMonth;
     }
 
@@ -49,6 +54,7 @@ class WorkMonth extends AggregateRoot<UUID, WorkMonthEvent> {
     }
 
     void calculateTotalHours() {
+
         final WorkHour totalWorkHours = workDays.stream()
                 .filter(workDay -> !workDay.isLeave())
                 .map(WorkDay::calculateTotalTime)
@@ -65,15 +71,15 @@ class WorkMonth extends AggregateRoot<UUID, WorkMonthEvent> {
 
     private void processChangingWorkDay(WorkDay another) {
         final Optional<WorkDay> workDay = workDays.stream().filter(day -> day.same(another.date())).findAny();
-        workDay.ifPresent((found) -> {
-            replaceWorkDay(found);
-            this.registerEvent(new WorkDayUpdatedEvent(this.id, found));
-        });
+        workDay.ifPresent((found) -> replaceWorkDay(found, another));
     }
 
-    private void replaceWorkDay(WorkDay workDay) {
-        workDays.removeIf((found) -> workDay.same(found.date()));
-        workDays.add(workDay);
+    private void replaceWorkDay(WorkDay base, WorkDay another) {
+        if(base.contentChanged(another)) {
+            workDays.removeIf((found) -> another.same(found.date()));
+            workDays.add(another);
+            this.registerEvent(new WorkDayUpdatedEvent(this.id, another));
+        }
     }
 
     private void checkWorkDay(WorkDay workDay) {

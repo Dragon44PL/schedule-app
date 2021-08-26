@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.schedule</groupId>
-    <artifactId>domain</artifactId>
-    <name>domain</name>
+    <artifactId>workmonth-domain</artifactId>
+    <name>workmonth-domain</name>
     <version>1.0.0</version>
 
     <properties>
@@ -17,8 +17,9 @@
 
         <dependency>
             <groupId>com.github.schedule</groupId>
-            <artifactId>core</artifactId>
-            <version>1.0.0</version>
+            <artifactId>workmonth-core</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
