@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.schedule</groupId>
-    <artifactId>core</artifactId>
-    <name>core</name>
+    <artifactId>workmonth-core</artifactId>
+    <name>workmonth-core</name>
     <version>1.0.0</version>
 
     <properties>
