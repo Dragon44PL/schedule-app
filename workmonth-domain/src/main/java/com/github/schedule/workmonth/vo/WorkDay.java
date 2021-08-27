@@ -30,7 +30,7 @@ public record WorkDay(LocalDate date, WorkHour startingHour, WorkHour endingHour
         return this.date.isAfter(date) || this.date.isEqual(date);
     }
 
-    public boolean same(LocalDate date) {
+    public boolean sameDate(LocalDate date) {
         return this.date.isEqual(date);
     }
 

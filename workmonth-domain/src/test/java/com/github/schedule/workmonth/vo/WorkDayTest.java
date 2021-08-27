@@ -169,4 +169,18 @@ class WorkDayTest {
         assertTrue(workDay.contentChanged(another));
     }
 
+    @Test
+    @DisplayName("'sameDate' Should Be True When Both Dates Are Same")
+    void sameDateShouldBeTrueWhenBothDatesAreSame() {
+        final WorkDay workDay = new WorkDay(WORKDAY_DATE, WORKDAY_IS_LEAVE);
+        assertTrue(workDay.sameDate(WORKDAY_DATE));
+    }
+
+    @Test
+    @DisplayName("'sameDate' Should Be False When Both Dates Are Not Same")
+    void sameDateShouldBeFalseWhenBothDatesAreNotSame() {
+        final WorkDay workDay = new WorkDay(WORKDAY_DATE, WORKDAY_IS_LEAVE);
+        assertFalse(workDay.sameDate(WORKDAY_DATE.plusDays(1)));
+    }
+
 }
