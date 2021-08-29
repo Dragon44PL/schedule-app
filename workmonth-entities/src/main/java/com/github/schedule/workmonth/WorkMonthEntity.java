@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Set;
 import java.util.UUID;
 
@@ -29,9 +30,7 @@ class WorkMonthEntity {
     @OneToMany(mappedBy = "workMonth")
     private Set<WorkDayEntity> workDays;
 
-    private LocalDate startingDate;
-
-    private LocalDate endingDate;
+    private YearMonth date;
 
     private WorkHourEntity totalHours;
 }

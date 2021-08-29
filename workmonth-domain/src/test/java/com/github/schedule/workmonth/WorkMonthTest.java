@@ -6,13 +6,13 @@ import com.github.schedule.workmonth.event.WorkMonthCreatedEvent;
 import com.github.schedule.workmonth.event.WorkMonthEvent;
 import com.github.schedule.workmonth.exception.WorkDayInvalidException;
 import com.github.schedule.workmonth.vo.UserId;
-import com.github.schedule.workmonth.vo.WorkDate;
 import com.github.schedule.workmonth.vo.WorkDay;
 import com.github.schedule.workmonth.vo.WorkHour;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,7 +21,7 @@ class WorkMonthTest {
 
     private final UUID WORK_MONTH_ID = UUID.randomUUID();
     private final UserId USER_ID = new UserId(UUID.randomUUID());
-    private final WorkDate WORKDATE = WorkDate.of(LocalDate.now());
+    private final YearMonth YEAR_MONTH = YearMonth.now();
 
     /*
         WorkMonth Events
@@ -41,7 +41,7 @@ class WorkMonthTest {
     @DisplayName("WorkMonth Should Be Restored Properly")
     void workMonthShouldBeRestoredProperly() {
         final Set<WorkDay> workDays = new HashSet<>();
-        final WorkMonth workMonth = WorkMonth.restore(WORK_MONTH_ID, USER_ID, WORKDATE, workDays);
+        final WorkMonth workMonth = WorkMonth.restore(WORK_MONTH_ID, USER_ID, YEAR_MONTH, workDays);
 
         final Optional<WorkMonthEvent> workMonthEvent = workMonth.findLatestEvent();
 
@@ -53,7 +53,7 @@ class WorkMonthTest {
     void workMonthShouldBeRestoredProperlyWithEventsAndEmpty() {
         final List<WorkMonthEvent> events = new ArrayList<>();
         final Set<WorkDay> workDays = new HashSet<>();
-        final WorkMonth workMonth = WorkMonth.restore(WORK_MONTH_ID, USER_ID, WORKDATE, workDays, events);
+        final WorkMonth workMonth = WorkMonth.restore(WORK_MONTH_ID, USER_ID, YEAR_MONTH, workDays, events);
 
         final Optional<WorkMonthEvent> workMonthEvent = workMonth.findLatestEvent();
 
@@ -66,7 +66,7 @@ class WorkMonthTest {
         final WorkHour totalHours = new WorkHour(10, 30);
         final List<WorkMonthEvent> events = Collections.singletonList(new TotalHoursCalculatedEvent(WORK_MONTH_ID, totalHours));
         final Set<WorkDay> workDays = new HashSet<>();
-        final WorkMonth workMonth = WorkMonth.restore(WORK_MONTH_ID, USER_ID, WORKDATE, workDays, events);
+        final WorkMonth workMonth = WorkMonth.restore(WORK_MONTH_ID, USER_ID, YEAR_MONTH, workDays, events);
 
         final Optional<WorkMonthEvent> workMonthEvent = workMonth.findLatestEvent();
         assertFalse(workMonthEvent.isEmpty());
@@ -80,23 +80,20 @@ class WorkMonthTest {
     @Test
     @DisplayName("WorkMonth Should Be Created Properly")
     void workMonthShouldBeCreatedProperly() {
-        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, WORKDATE);
+        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, YEAR_MONTH);
 
         final Optional<WorkMonthEvent> workMonthEvent = workMonth.findLatestEvent();
         assertTrue(workMonthEvent.isPresent());
         assertEquals(WORK_MONTH_CREATED_EVENT, workMonthEvent.get().getClass());
 
         final WorkMonthCreatedEvent workMonthCreatedEvent = (WorkMonthCreatedEvent) workMonthEvent.get();
-        final LocalDate startingDate = LocalDate.of(WORKDATE.year(), WORKDATE.month(), 1);
-        final LocalDate endingDate = startingDate.withDayOfMonth(startingDate.lengthOfMonth());
         assertEquals(WORK_MONTH_ID, workMonthCreatedEvent.aggregateId());
         assertEquals(USER_ID, workMonthCreatedEvent.userId());
-        assertEquals(startingDate, workMonthCreatedEvent.startingDate());
-        assertEquals(endingDate, workMonthCreatedEvent.endingDate());
+        assertEquals(YEAR_MONTH, workMonthCreatedEvent.yearMonth());
         assertEquals(WorkHour.zero(), workMonthCreatedEvent.totalHours());
-        assertEquals(endingDate.lengthOfMonth(), workMonthCreatedEvent.workDays().size());
+        assertEquals(YEAR_MONTH.lengthOfMonth(), workMonthCreatedEvent.workDays().size());
 
-        final LocalDate currentDate = LocalDate.of(WORKDATE.year(), WORKDATE.month(), 1);
+        final LocalDate currentDate = YEAR_MONTH.atDay(1);
         currentDate.datesUntil(currentDate.plusDays(1)).forEach((date) -> {
             final Optional<WorkDay> workDay = workMonthCreatedEvent.workDays().stream().filter((day) -> day.sameDate(date)).findAny();
             assertTrue(workDay.isPresent());
@@ -108,11 +105,11 @@ class WorkMonthTest {
     @Test
     @DisplayName("WorkMonth Should Change WorkDay When Exists In Current WorkMonth Range")
     void shouldChangeWorkDayWhenExists() {
-        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, WORKDATE);
+        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, YEAR_MONTH);
 
         final WorkHour startingHour = new WorkHour(8, 0);
         final WorkHour endingHour = new WorkHour(16, 0);
-        final WorkDay workDay = new WorkDay(LocalDate.of(WORKDATE.year(), WORKDATE.month(), 1).plusDays(10), startingHour, endingHour, false);
+        final WorkDay workDay = new WorkDay(YEAR_MONTH.atDay(10), startingHour, endingHour, false);
         workMonth.changeWorkDay(workDay);
 
         final Optional<WorkMonthEvent> workMonthEvent = workMonth.findLatestEvent();
@@ -127,8 +124,8 @@ class WorkMonthTest {
     @Test
     @DisplayName("WorkMonth Not Should Change WorkDay When Haven't Changed")
     void shouldNotChangeWorkDayWhenHaveNotChanged() {
-        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, WORKDATE);
-        final WorkDay workDay = new WorkDay(LocalDate.of(WORKDATE.year(), WORKDATE.month(), 1), false);
+        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID,YEAR_MONTH);
+        final WorkDay workDay = new WorkDay(YEAR_MONTH.atDay(1), false);
         workMonth.changeWorkDay(workDay);
 
         final Optional<WorkMonthEvent> workMonthEvent = workMonth.findLatestEvent();
@@ -139,13 +136,13 @@ class WorkMonthTest {
     @Test
     @DisplayName("WorkMonth Should Throws 'WorkDayInvalidException' When WorkDay Not In Range")
     void shouldThrowsWorkDayInvalidExceptionWhenWorkDayNotInRange() {
-        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, WORKDATE);
+        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, YEAR_MONTH);
 
-        final LocalDate startingDate = LocalDate.of(WORKDATE.year(), WORKDATE.month(), 1);
+        final LocalDate startingDate = YEAR_MONTH.atDay(1);
         final WorkDay workDayWithDayBefore = new WorkDay(startingDate.minusDays(1), false);
         assertThrows(WORK_DAY_INVALID_EXCEPTION, () -> workMonth.changeWorkDay(workDayWithDayBefore));
 
-        final LocalDate endingDate = startingDate.withDayOfMonth(startingDate.lengthOfMonth()).plusDays(1);
+        final LocalDate endingDate = YEAR_MONTH.atEndOfMonth().plusDays(1);
         final WorkDay workDayWithDayAfter = new WorkDay(endingDate, false);
         assertThrows(WORK_DAY_INVALID_EXCEPTION, () -> workMonth.changeWorkDay(workDayWithDayAfter));
     }
@@ -153,7 +150,7 @@ class WorkMonthTest {
     @Test
     @DisplayName("WorkMonth Should Calculate Zero Hours When Not Changing WorkDays")
     void shouldCalculateZeroHoursWhenNotChangingWorkDays() {
-        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, WORKDATE);
+        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, YEAR_MONTH);
         workMonth.calculateTotalHours();
 
         final Optional<WorkMonthEvent> workMonthEvent = workMonth.findLatestEvent();
@@ -169,11 +166,11 @@ class WorkMonthTest {
     @Test
     @DisplayName("WorkMonth Should Calculate Total Hours Properly When WorkDay Changed")
     void shouldCalculateTotalHoursProperlyWhenWorkDayChanged() {
-        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, WORKDATE);
+        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, YEAR_MONTH);
 
         final WorkHour first = new WorkHour(8, 30);
         final WorkHour second = new WorkHour(17, 0);
-        final WorkDay workDay = new WorkDay(LocalDate.of(WORKDATE.year(), WORKDATE.month(), 1), first, second, false);
+        final WorkDay workDay = new WorkDay(YEAR_MONTH.atDay(1), first, second, false);
 
         workMonth.changeWorkDay(workDay);
         workMonth.calculateTotalHours();
@@ -191,11 +188,11 @@ class WorkMonthTest {
     @Test
     @DisplayName("WorkMonth Should Not Include Changed WorkDay When 'isLeave' is true")
     void shouldNotIncludeChangedWorkDayWhenIsLeaveIsTrue() {
-        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, WORKDATE);
+        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, YEAR_MONTH);
 
         final WorkHour first = new WorkHour(8, 30);
         final WorkHour second = new WorkHour(17, 0);
-        final WorkDay workDay = new WorkDay(LocalDate.of(WORKDATE.year(), WORKDATE.month(), 1), first, second, true);
+        final WorkDay workDay = new WorkDay(YEAR_MONTH.atDay(1), first, second, true);
 
         workMonth.changeWorkDay(workDay);
         workMonth.calculateTotalHours();
@@ -214,10 +211,10 @@ class WorkMonthTest {
     @Test
     @DisplayName("WorkMonth Should Changed All WorkDays When All In Range And Data Changed")
     void shouldChangedAllWorkDaysWhenAllInRangeAndDataChanged() {
-        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, WORKDATE);
+        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, YEAR_MONTH);
         final WorkHour differentWorkHour = new WorkHour(10, 10);
-        final WorkDay first = new WorkDay(LocalDate.of(WORKDATE.year(), WORKDATE.month(), 1), differentWorkHour, differentWorkHour, false);
-        final WorkDay second = new WorkDay(LocalDate.of(WORKDATE.year(), WORKDATE.month(), 2), differentWorkHour, differentWorkHour, false);
+        final WorkDay first = new WorkDay(YEAR_MONTH.atDay(1), differentWorkHour, differentWorkHour, false);
+        final WorkDay second = new WorkDay(YEAR_MONTH.atDay(2), differentWorkHour, differentWorkHour, false);
 
         workMonth.changeWorkDays(Set.of(first, second));
         final Optional<WorkMonthEvent> workMonthEvent = workMonth.findLatestEvent();
@@ -234,10 +231,10 @@ class WorkMonthTest {
     @Test
     @DisplayName("WorkMonth Should Changed Only One WorkDay")
     void shouldChangeOnlyOneWorkDay() {
-        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, WORKDATE);
+        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, YEAR_MONTH);
         final WorkHour differentWorkHour = new WorkHour(10, 10);
-        final WorkDay first = new WorkDay(LocalDate.of(WORKDATE.year(), WORKDATE.month(), 1), differentWorkHour, differentWorkHour, false);
-        final WorkDay second = new WorkDay(LocalDate.of(WORKDATE.year(), WORKDATE.month(), 2), WorkHour.zero(), WorkHour.zero(), false);
+        final WorkDay first = new WorkDay(YEAR_MONTH.atDay(1), differentWorkHour, differentWorkHour, false);
+        final WorkDay second = new WorkDay(YEAR_MONTH.atDay(2), WorkHour.zero(), WorkHour.zero(), false);
 
         workMonth.changeWorkDays(Set.of(first, second));
         final Optional<WorkMonthEvent> workMonthEvent = workMonth.findLatestEvent();
@@ -254,9 +251,9 @@ class WorkMonthTest {
     @Test
     @DisplayName("WorkMonth Should Not Change WorkDays")
     void shouldNotChangeWorkDays() {
-        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, WORKDATE);
-        final WorkDay first = new WorkDay(LocalDate.of(WORKDATE.year(), WORKDATE.month(), 1), WorkHour.zero(), WorkHour.zero(), false);
-        final WorkDay second = new WorkDay(LocalDate.of(WORKDATE.year(), WORKDATE.month(), 2), WorkHour.zero(), WorkHour.zero(), false);
+        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, YEAR_MONTH);
+        final WorkDay first = new WorkDay(YEAR_MONTH.atDay(1), WorkHour.zero(), WorkHour.zero(), false);
+        final WorkDay second = new WorkDay(YEAR_MONTH.atDay(2), WorkHour.zero(), WorkHour.zero(), false);
 
         workMonth.changeWorkDays(Set.of(first, second));
         final Optional<WorkMonthEvent> workMonthEvent = workMonth.findLatestEvent();
@@ -267,9 +264,9 @@ class WorkMonthTest {
     @Test
     @DisplayName("WorkMonth Should Throw 'WorkDayInvalidException' When Not In Range")
     void shouldThrowWorkDayInvalidExceptionWhenNotInRange() {
-        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, WORKDATE);
-        final WorkDay first = new WorkDay(LocalDate.of(WORKDATE.year(), WORKDATE.month(), 1), WorkHour.zero(), WorkHour.zero(), false);
-        final WorkDay second = new WorkDay(LocalDate.of(WORKDATE.year(), WORKDATE.month(), 2).minusDays(10), WorkHour.zero(), WorkHour.zero(), false);
+        final WorkMonth workMonth = WorkMonth.create(WORK_MONTH_ID, USER_ID, YEAR_MONTH);
+        final WorkDay first = new WorkDay(YEAR_MONTH.atDay(1), WorkHour.zero(), WorkHour.zero(), false);
+        final WorkDay second = new WorkDay(YEAR_MONTH.atDay(2).minusDays(10), WorkHour.zero(), WorkHour.zero(), false);
 
         assertThrows(WORK_DAY_INVALID_EXCEPTION, () -> workMonth.changeWorkDays(Set.of(first, second)));
     }

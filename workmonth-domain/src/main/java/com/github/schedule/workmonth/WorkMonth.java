@@ -7,11 +7,11 @@ import com.github.schedule.workmonth.event.WorkMonthCreatedEvent;
 import com.github.schedule.workmonth.event.WorkMonthEvent;
 import com.github.schedule.workmonth.exception.WorkDayInvalidException;
 import com.github.schedule.workmonth.vo.UserId;
-import com.github.schedule.workmonth.vo.WorkDate;
 import com.github.schedule.workmonth.vo.WorkHour;
 import com.github.schedule.workmonth.vo.WorkDay;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,34 +19,28 @@ class WorkMonth extends AggregateRoot<UUID, WorkMonthEvent> {
 
     private final UUID id;
     private final UserId userId;
-    private final LocalDate startingDate;
-    private final LocalDate endingDate;
+    private final YearMonth yearMonth;
     private final Set<WorkDay> workDays;
 
-    static WorkMonth restore(UUID id, UserId userId, WorkDate workDate, Set<WorkDay> workDays, List<WorkMonthEvent> events) throws WorkDayInvalidException {
-        final LocalDate startingDate = LocalDate.of(workDate.year(), workDate.month(), 1);
-        return new WorkMonth(id, userId, startingDate, workDays, events);
+    static WorkMonth restore(UUID id, UserId userId, YearMonth yearMonth, Set<WorkDay> workDays, List<WorkMonthEvent> events) throws WorkDayInvalidException {
+        return new WorkMonth(id, userId, yearMonth, workDays, events);
     }
 
-    static WorkMonth restore(UUID id, UserId userId, WorkDate workDate, Set<WorkDay> workDays) throws WorkDayInvalidException {
-        final LocalDate startingDate = LocalDate.of(workDate.year(), workDate.month(), 1);
-        return new WorkMonth(id, userId, startingDate, workDays, new ArrayList<>());
+    static WorkMonth restore(UUID id, UserId userId, YearMonth yearMonth, Set<WorkDay> workDays) throws WorkDayInvalidException {
+        return new WorkMonth(id, userId, yearMonth, workDays, new ArrayList<>());
     }
 
-    static WorkMonth create(UUID id, UserId userId, WorkDate workDate) {
-        final LocalDate startingDate = LocalDate.of(workDate.year(), workDate.month(), 1);
-        final LocalDate endingDate = startingDate.withDayOfMonth(startingDate.lengthOfMonth());
-        final WorkMonth workMonth = new WorkMonth(id, userId, startingDate, generateWorkDays(startingDate, endingDate), new ArrayList<>());
-        workMonth.registerEvent(new WorkMonthCreatedEvent(workMonth.id, workMonth.userId, workMonth.startingDate, workMonth.endingDate, WorkHour.zero(), workMonth.workDays));
+    static WorkMonth create(UUID id, UserId userId, YearMonth yearMonth) {
+        final WorkMonth workMonth = new WorkMonth(id, userId, yearMonth, generateWorkDays(yearMonth.atDay(1), yearMonth.atEndOfMonth()), new ArrayList<>());
+        workMonth.registerEvent(new WorkMonthCreatedEvent(workMonth.id, workMonth.userId, workMonth.yearMonth, WorkHour.zero(), workMonth.workDays));
         return workMonth;
     }
 
-    private WorkMonth(UUID id, UserId userId, LocalDate startingDate, Set<WorkDay> workDays, List<WorkMonthEvent> events) {
+    private WorkMonth(UUID id, UserId userId, YearMonth yearMonth, Set<WorkDay> workDays, List<WorkMonthEvent> events) {
         super(events);
         this.id = id;
         this.userId = userId;
-        this.startingDate = startingDate;
-        this.endingDate = startingDate.withDayOfMonth(startingDate.lengthOfMonth());
+        this.yearMonth = yearMonth;
         this.workDays = workDays;
     }
 
@@ -94,7 +88,7 @@ class WorkMonth extends AggregateRoot<UUID, WorkMonthEvent> {
     }
 
     private void checkWorkDay(WorkDay workDay) {
-        if(!(workDay.notLesserThan(startingDate) && workDay.notGreaterThan(endingDate))) {
+        if(!(workDay.notLesserThan(yearMonth.atDay(1)) && workDay.notGreaterThan(yearMonth.atEndOfMonth()))) {
             throw new WorkDayInvalidException();
         }
     }
