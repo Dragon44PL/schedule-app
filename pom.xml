@@ -8,9 +8,17 @@
     <artifactId>schedule</artifactId>
     <version>1.0.0</version>
 
+    <packaging>pom</packaging>
+
     <properties>
         <java.version>8</java.version>
     </properties>
+
+    <modules>
+        <module>core</module>
+        <module>workmonth-service</module>
+    </modules>
+
 
     <build>
         <plugins>
