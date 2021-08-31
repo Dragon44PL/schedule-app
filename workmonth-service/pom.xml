@@ -6,8 +6,13 @@
 
     <groupId>com.github.schedule</groupId>
     <artifactId>workmonth</artifactId>
+    <name>workmonth-service</name>
     <version>1.0.0</version>
 
     <packaging>pom</packaging>
+
+    <modules>
+        <module>domain</module>
+    </modules>
 
 </project>

@@ -5,7 +5,7 @@ import com.github.schedule.workmonth.event.TotalHoursCalculatedEvent;
 import com.github.schedule.workmonth.event.WorkDaysChangedEvent;
 import com.github.schedule.workmonth.event.WorkMonthCreatedEvent;
 import com.github.schedule.workmonth.event.WorkMonthEvent;
-import com.github.schedule.workmonth.exception.WorkDayInvalidException;
+import com.github.schedule.workmonth.exception.WorkDayOutOfRangeException;
 import com.github.schedule.workmonth.vo.UserId;
 import com.github.schedule.workmonth.vo.WorkHour;
 import com.github.schedule.workmonth.vo.WorkDay;
@@ -22,11 +22,11 @@ class WorkMonth extends AggregateRoot<UUID, WorkMonthEvent> {
     private final YearMonth yearMonth;
     private final Set<WorkDay> workDays;
 
-    static WorkMonth restore(UUID id, UserId userId, YearMonth yearMonth, Set<WorkDay> workDays, List<WorkMonthEvent> events) throws WorkDayInvalidException {
+    static WorkMonth restore(UUID id, UserId userId, YearMonth yearMonth, Set<WorkDay> workDays, List<WorkMonthEvent> events) throws WorkDayOutOfRangeException {
         return new WorkMonth(id, userId, yearMonth, workDays, events);
     }
 
-    static WorkMonth restore(UUID id, UserId userId, YearMonth yearMonth, Set<WorkDay> workDays) throws WorkDayInvalidException {
+    static WorkMonth restore(UUID id, UserId userId, YearMonth yearMonth, Set<WorkDay> workDays) throws WorkDayOutOfRangeException {
         return new WorkMonth(id, userId, yearMonth, workDays, new ArrayList<>());
     }
 
@@ -61,11 +61,7 @@ class WorkMonth extends AggregateRoot<UUID, WorkMonthEvent> {
         this.registerEvent(totalHoursCalculatedEvent);
     }
 
-    void changeWorkDay(WorkDay another) throws WorkDayInvalidException {
-        changeWorkDays(Set.of(another));
-    }
-
-    void changeWorkDays(Set<WorkDay> workDays) throws WorkDayInvalidException {
+    void changeWorkDays(Set<WorkDay> workDays) throws WorkDayOutOfRangeException {
         workDays.forEach(this::checkWorkDay);
         final Set<WorkDay> changed = workDays.stream()
                                         .map(this::processChangingWorkDay).filter(Optional::isPresent)
@@ -89,7 +85,8 @@ class WorkMonth extends AggregateRoot<UUID, WorkMonthEvent> {
 
     private void checkWorkDay(WorkDay workDay) {
         if(!(workDay.notLesserThan(yearMonth.atDay(1)) && workDay.notGreaterThan(yearMonth.atEndOfMonth()))) {
-            throw new WorkDayInvalidException();
+            final String message = String.format("WorkDay Out of Range: '%s' - From '%s' to '%s'", workDay, yearMonth.atDay(1), yearMonth.atEndOfMonth());
+            throw new WorkDayOutOfRangeException(message);
         }
     }
 }
