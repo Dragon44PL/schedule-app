@@ -13,11 +13,11 @@ public class WorkMonthFacade {
 
     private final WorkMonthRepository workMonthRepository;
 
-    WorkMonthFacade(WorkMonthRepository workMonthRepository) {
+    public WorkMonthFacade(WorkMonthRepository workMonthRepository) {
         this.workMonthRepository = workMonthRepository;
     }
 
-    List<WorkMonthEvent> createWorkMonth(WorkMonthCreateCommand workMonthCreateCommand) throws WorkMonthExistsException {
+    public List<WorkMonthEvent> createWorkMonth(WorkMonthCreateCommand workMonthCreateCommand) throws WorkMonthExistsException {
         final WorkMonth workMonth = WorkMonth.create(UUID.randomUUID(), workMonthCreateCommand.userId(), workMonthCreateCommand.yearMonth());
         final Optional<WorkMonth> found = workMonthRepository.findByUser(workMonthCreateCommand.userId(), workMonthCreateCommand.yearMonth());
         found.ifPresent(f -> { throw new WorkMonthExistsException(); });
@@ -26,7 +26,7 @@ public class WorkMonthFacade {
         return workMonth.findLatestEvent().stream().toList();
     }
 
-    List<WorkMonthEvent> updateWorkDays(WorkDaysChangeCommand workDaysChangeCommand) throws WorkDayOutOfRangeException {
+    public List<WorkMonthEvent> updateWorkDays(WorkDaysChangeCommand workDaysChangeCommand) throws WorkDayOutOfRangeException {
         Optional<WorkMonth> workMonth = workMonthRepository.findById(workDaysChangeCommand.id());
         return workMonth.map(month -> processUpdatingWorkDays(month, workDaysChangeCommand)).orElseGet(ArrayList::new);
     }
