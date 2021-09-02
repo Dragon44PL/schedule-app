@@ -3,10 +3,7 @@ package com.github.schedule.workmonth;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -25,6 +22,7 @@ class WorkDayEntity {
     private UUID id;
 
     @ManyToOne
+    @JoinColumn(name = "workmonth_id")
     private WorkMonthEntity workMonth;
 
     private LocalDate date;
