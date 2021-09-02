@@ -8,6 +8,7 @@
     <artifactId>domain</artifactId>
     <name>workmonth-domain</name>
     <version>1.0.0</version>
+    <packaging>jar</packaging>
 
     <properties>
         <java.version>16</java.version>
@@ -18,7 +19,7 @@
         <dependency>
             <groupId>com.github.schedule</groupId>
             <artifactId>core</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

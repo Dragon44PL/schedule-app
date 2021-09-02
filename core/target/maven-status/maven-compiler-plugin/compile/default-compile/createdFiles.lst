@@ -1,0 +1,6 @@
+com\github\schedule\core\events\DomainEventHandler.class
+com\github\schedule\core\events\DomainEventPublisher.class
+com\github\schedule\core\DomainRepository.class
+com\github\schedule\core\events\DomainEvent.class
+com\github\schedule\core\Aggregate.class
+com\github\schedule\core\AggregateRoot.class
