@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class WorkHourTest {
+public class WorkHourTest {
 
     private final int LESSER_HOUR = 15;
     private final int GREATER_HOUR = 16;

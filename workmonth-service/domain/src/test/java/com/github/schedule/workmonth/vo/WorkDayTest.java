@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class WorkDayTest {
+public class WorkDayTest {
 
     private final LocalDate WORKDAY_DATE = LocalDate.now();
     private final boolean WORKDAY_IS_LEAVE = false;

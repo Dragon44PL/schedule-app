@@ -17,7 +17,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class WorkMonthTest {
+public class WorkMonthTest {
 
     private final UUID WORK_MONTH_ID = UUID.randomUUID();
     private final UserId USER_ID = new UserId(UUID.randomUUID());
