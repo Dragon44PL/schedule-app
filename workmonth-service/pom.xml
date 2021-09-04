@@ -19,6 +19,7 @@
         <module>persistence</module>
 
         <module>command</module>
+        <module>query</module>
     </modules>
 
 </project>
