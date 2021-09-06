@@ -12,15 +12,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.print.attribute.standard.Media;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.UUID;
 
+@Validated
 @Controller
 class WorkMonthCommandEndpoint {
 
@@ -42,7 +46,7 @@ class WorkMonthCommandEndpoint {
     }
 
     @PutMapping(value = "/api/workmonth/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> changeWorkDays(@PathVariable @Valid @UniqueIdentifier String id, @RequestBody @Valid WorkDaysChangeDto workDaysChangeDto) {
+    ResponseEntity<?> changeWorkDays(@Valid @PathVariable @NotBlank @UniqueIdentifier String id, @Valid @RequestBody WorkDaysChangeDto workDaysChangeDto) {
         final WorkDaysChangeCommand workDaysChangeCommand = workMonthRequestConverter.convertWorkDaysChangedCommand(id, workDaysChangeDto);
         final List<WorkMonthEvent> workMonthEvents = workMonthFacade.updateWorkDays(workDaysChangeCommand);
         return workMonthEvents.size() != 0
