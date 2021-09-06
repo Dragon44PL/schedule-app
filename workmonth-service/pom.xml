@@ -4,7 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.schedule</groupId>
+    <parent>
+        <artifactId>schedule</artifactId>
+        <groupId>com.github</groupId>
+        <version>1.0.0</version>
+    </parent>
+
     <artifactId>workmonth</artifactId>
     <name>workmonth</name>
     <version>1.0.0</version>
@@ -20,6 +25,7 @@
 
         <module>command</module>
         <module>query</module>
+        <module>endpoint</module>
     </modules>
 
 </project>
