@@ -4,7 +4,6 @@ import com.github.schedule.workmonth.converter.WorkMonthResponseConverter;
 import com.github.schedule.workmonth.dto.WorkMonthQueryDto;
 import com.github.schedule.workmonth.dto.response.WorkMonthResponseDto;
 import com.github.schedule.workmonth.validation.constraint.UniqueIdentifier;
-import com.sun.istack.NotNull;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -41,7 +40,7 @@ class WorkMonthQueryEndpoint {
     }
 
 
-    @GetMapping("/api/workmonth/{id}")
+    @GetMapping(value = "/api/workmonth/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<?> findById(@Valid @PathVariable @NotBlank @UniqueIdentifier String id) {
         final Optional<WorkMonthQueryDto> workMonthDto = workMonthEntityQueryRepository.findById(UUID.fromString(id));
         return workMonthDto.isPresent()
@@ -50,7 +49,7 @@ class WorkMonthQueryEndpoint {
     }
 
     @GetMapping(value = "/api/workmonth/user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<WorkMonthResponseDto> findByUser(@Valid @PathVariable @NotNull @UniqueIdentifier String id) {
+    List<WorkMonthResponseDto> findByUser(@Valid @PathVariable @NotBlank @UniqueIdentifier String id) {
         final List<WorkMonthQueryDto> query = workMonthEntityQueryRepository.findAllByUserId(UUID.fromString(id));
         return query.stream().map(workMonthResponseConverter::convertWorkMonthResponseDto).collect(Collectors.toList());
     }
