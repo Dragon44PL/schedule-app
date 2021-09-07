@@ -9,4 +9,5 @@ public class WorkMonthExistsException extends RuntimeException {
     public WorkMonthExistsException() {
         super();
     }
+
 }
