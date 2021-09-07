@@ -26,6 +26,8 @@
         <module>command</module>
         <module>query</module>
         <module>endpoint</module>
+
+        <module>launcher</module>
     </modules>
 
 </project>
