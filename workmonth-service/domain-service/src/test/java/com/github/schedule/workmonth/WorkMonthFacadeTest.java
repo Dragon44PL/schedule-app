@@ -11,12 +11,12 @@ import com.github.schedule.workmonth.exception.WorkMonthExistsException;
 import com.github.schedule.workmonth.vo.UserId;
 import com.github.schedule.workmonth.vo.WorkDay;
 import com.github.schedule.workmonth.vo.WorkHour;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -30,13 +30,15 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class WorkMonthFacadeTest {
 
-    private static WorkMonthFacade workMonthFacade;
+    @InjectMocks
+    private WorkMonthFacade workMonthFacade;
 
     /*
         Mocks
      */
 
-    private static WorkMonthRepository workMonthRepository;
+    @Mock
+    private WorkMonthRepository workMonthRepository;
 
     /*
         WorkMonth Events
@@ -52,12 +54,6 @@ public class WorkMonthFacadeTest {
 
     private final Class<WorkDayOutOfRangeException> WORK_DAY_OUT_OF_RANGE_EXCEPTION = WorkDayOutOfRangeException.class;
     private final Class<WorkMonthExistsException> WORK_MONTH_EXISTS_EXCEPTION = WorkMonthExistsException.class;
-
-    @BeforeEach
-    void set() {
-        workMonthRepository = Mockito.mock(WorkMonthRepository.class);
-        workMonthFacade = new WorkMonthFacade(workMonthRepository);
-    }
 
     @Test
     @DisplayName("Should Create WorkMonth Properly And Return WorkMonthCreatedEvent")
