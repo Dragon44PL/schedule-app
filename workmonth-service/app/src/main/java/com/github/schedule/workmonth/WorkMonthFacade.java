@@ -18,10 +18,10 @@ public class WorkMonthFacade {
     }
 
     public List<WorkMonthEvent> createWorkMonth(WorkMonthCreateCommand workMonthCreateCommand) throws WorkMonthExistsException {
-        final WorkMonth workMonth = WorkMonth.create(UUID.randomUUID(), workMonthCreateCommand.userId(), workMonthCreateCommand.yearMonth());
         final Optional<WorkMonth> found = workMonthRepository.findByUser(workMonthCreateCommand.userId(), workMonthCreateCommand.yearMonth());
         found.ifPresent(f -> { throw new WorkMonthExistsException(); });
 
+        final WorkMonth workMonth = WorkMonth.create(UUID.randomUUID(), workMonthCreateCommand.userId(), workMonthCreateCommand.yearMonth());
         workMonthRepository.save(workMonth);
         return workMonth.findLatestEvent().stream().toList();
     }
