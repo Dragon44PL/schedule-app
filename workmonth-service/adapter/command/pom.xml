@@ -5,28 +5,21 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.4</version>
-        <relativePath/>
+        <groupId>com.github.schedule.workmonth</groupId>
+        <artifactId>adapter</artifactId>
+        <version>1.0.0</version>
     </parent>
 
-    <groupId>com.github.schedule.workmonth</groupId>
+    <groupId>com.github.schedule.workmonth.adapter</groupId>
     <artifactId>command</artifactId>
     <name>workmonth-command</name>
-    <version>1.0.0</version>
+    <version>${parent.version}</version>
 
     <properties>
         <java.version>16</java.version>
     </properties>
 
     <dependencies>
-
-        <dependency>
-            <groupId>com.github.schedule.workmonth</groupId>
-            <artifactId>domain-service</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>com.github.schedule.workmonth</groupId>
