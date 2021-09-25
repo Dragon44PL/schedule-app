@@ -12,8 +12,14 @@ import com.github.schedule.workmonth.vo.WorkHour;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -25,8 +31,11 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ActiveProfiles("test")
-@SpringBootTest(classes = { WorkMonthFacadeConfig.class, WorkMonthFacadeProxy.class })
+@ActiveProfiles("dev")
+@SpringBootTest(classes = {WorkMonthFacadeProxy.class, WorkMonthEntityRepository.class})
+@ComponentScan("com.github.schedule.workmonth")
+@EnableAutoConfiguration
+@EnableJpaRepositories
 public class WorkMonthFacadeProxyIT {
 
     @Autowired

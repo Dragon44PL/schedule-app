@@ -4,12 +4,14 @@ import com.github.schedule.core.events.DomainEventHandler;
 import com.github.schedule.workmonth.event.WorkDaysChangedEvent;
 import com.github.schedule.workmonth.vo.WorkDay;
 import com.github.schedule.workmonth.vo.WorkHour;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 
+@Component
 class WorkDaysChangedHandler implements DomainEventHandler<WorkDaysChangedEvent> {
 
     private final WorkMonthEntityRepository workMonthEntityRepository;

@@ -3,10 +3,12 @@ package com.github.schedule.workmonth;
 import com.github.schedule.workmonth.vo.UserId;
 import com.github.schedule.workmonth.vo.WorkDay;
 import com.github.schedule.workmonth.vo.WorkHour;
+import org.springframework.stereotype.Component;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Component
 class WorkMonthEntityConverter {
 
     WorkMonth convertWorkMonth(WorkMonthEntity workMonthEntity) {

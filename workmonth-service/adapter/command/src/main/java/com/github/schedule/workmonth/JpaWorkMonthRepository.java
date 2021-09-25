@@ -1,11 +1,13 @@
 package com.github.schedule.workmonth;
 
 import com.github.schedule.workmonth.vo.UserId;
+import org.springframework.stereotype.Component;
 
 import java.time.YearMonth;
 import java.util.Optional;
 import java.util.UUID;
 
+@Component
 class JpaWorkMonthRepository implements WorkMonthRepository {
 
     private final WorkMonthEntityRepository workMonthEntityRepository;

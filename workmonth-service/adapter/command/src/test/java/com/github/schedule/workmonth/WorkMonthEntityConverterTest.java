@@ -4,6 +4,7 @@ import com.github.schedule.workmonth.vo.WorkDay;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ActiveProfiles("dev")
 class WorkMonthEntityConverterTest {
 
     private static WorkMonthEntityConverter workMonthEntityConverter;
