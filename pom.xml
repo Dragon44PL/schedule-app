@@ -14,6 +14,11 @@
         <java.version>8</java.version>
     </properties>
 
+    <modules>
+        <module>core</module>
+        <module>workmonth-service</module>
+    </modules>
+
     <build>
         <plugins>
             <plugin>

@@ -24,8 +24,8 @@
 
         <dependency>
             <groupId>com.github.schedule.workmonth</groupId>
-            <artifactId>endpoint</artifactId>
-            <version>1.0.0</version>
+            <artifactId>adapter</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

@@ -12,21 +12,15 @@
 
     <artifactId>workmonth</artifactId>
     <name>workmonth</name>
-    <version>1.0.0</version>
+    <version>${parent.version}</version>
 
     <packaging>pom</packaging>
 
     <modules>
         <module>domain</module>
-        <module>domain-service</module>
+        <module>app</module>
 
-        <module>entities</module>
-        <module>persistence</module>
-
-        <module>command</module>
-        <module>query</module>
-        <module>endpoint</module>
-
+        <module>adapter</module>
         <module>launcher</module>
     </modules>
 
