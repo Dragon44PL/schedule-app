@@ -1,0 +1,20 @@
+package com.github.schedule.workmonth.dto.request.workday;
+
+import com.github.schedule.workmonth.validation.constraint.UniqueIdentifier;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.validation.constraints.NotNull;
+import java.util.Set;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class WorkDaysChangeDto {
+
+    @NotNull
+    private Set<WorkDayRequestDto> workDays;
+}

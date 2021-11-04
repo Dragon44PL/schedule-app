@@ -11,7 +11,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.github.schedule.workmonth</groupId>
+    <groupId>com.github.schedule.workmonth.adapter</groupId>
     <artifactId>endpoint</artifactId>
     <name>workmonth-endpoint</name>
     <version>1.0.0</version>
@@ -23,13 +23,13 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.github.schedule.workmonth</groupId>
+            <groupId>com.github.schedule.workmonth.adapter</groupId>
             <artifactId>command</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.github.schedule.workmonth</groupId>
+            <groupId>com.github.schedule.workmonth.adapter</groupId>
             <artifactId>query</artifactId>
             <version>${project.version}</version>
         </dependency>
