@@ -22,8 +22,8 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.github.schedule.workmonth</groupId>
-            <artifactId>persistence</artifactId>
+            <groupId>com.github.schedule.workmonth.adapter</groupId>
+            <artifactId>entities</artifactId>
             <version>${project.version}</version>
         </dependency>
 

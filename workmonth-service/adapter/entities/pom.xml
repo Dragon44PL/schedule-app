@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.schedule.workmonth</groupId>
+    <groupId>com.github.schedule.workmonth.adapter</groupId>
     <artifactId>entities</artifactId>
     <name>workmonth-entities</name>
     <version>1.0.0</version>
