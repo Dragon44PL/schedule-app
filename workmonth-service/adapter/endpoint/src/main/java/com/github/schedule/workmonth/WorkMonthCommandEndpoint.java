@@ -7,25 +7,22 @@ import com.github.schedule.workmonth.dto.request.workday.WorkDaysChangeDto;
 import com.github.schedule.workmonth.dto.request.workmonth.WorkMonthCreateDto;
 import com.github.schedule.workmonth.event.WorkMonthEvent;
 import com.github.schedule.workmonth.validation.constraint.UniqueIdentifier;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
-import javax.print.attribute.standard.Media;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.UUID;
 
 @Validated
-@Controller
+@RestController
+@Tag(name = "Workmonth command")
 class WorkMonthCommandEndpoint {
 
     private final WorkMonthFacade workMonthFacade;

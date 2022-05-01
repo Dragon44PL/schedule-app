@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class WorkMonthQueryEndpointTest extends BaseEndpointTest {
 
     @MockBean
-    private JpaWorkMonthQueryRepository jpaWorkMonthQueryRepository;
+    private WorkMonthQuery jpaWorkMonthQuery;
 
     /*
         Data
@@ -42,7 +42,7 @@ public class WorkMonthQueryEndpointTest extends BaseEndpointTest {
     @Test
     @DisplayName("Endpoint Should Find All WorkMonths")
     void shouldFindAllWorkMonths() throws Exception {
-        when(jpaWorkMonthQueryRepository.findAll()).thenReturn(List.of(WORK_MONTH_QUERY_DTO));
+        when(jpaWorkMonthQuery.findAll()).thenReturn(List.of(WORK_MONTH_QUERY_DTO));
 
         performComparingWorkMonthResultCollection(this.mockMvc.perform(get("/api/workmonth").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)));
     }
@@ -57,7 +57,7 @@ public class WorkMonthQueryEndpointTest extends BaseEndpointTest {
     @Test
     @DisplayName("Endpoint Should Find WorkMonths By Date")
     void shouldFindWorkMonthsByDate() throws Exception {
-        when(jpaWorkMonthQueryRepository.findAllByDate(any(YearMonth.class))).thenAnswer((arg) -> {
+        when(jpaWorkMonthQuery.findAllByDate(any(YearMonth.class))).thenAnswer((arg) -> {
             final YearMonth yearMonth = arg.getArgument(0);
             return yearMonth.equals(WORK_MONTH_QUERY_DTO.date()) ? List.of(WORK_MONTH_QUERY_DTO) : new ArrayList<>();
         });
@@ -70,7 +70,7 @@ public class WorkMonthQueryEndpointTest extends BaseEndpointTest {
     @Test
     @DisplayName("Endpoint Should Not Find WorkMonths By Date")
     void shouldNotFindWorkMonthsByDate() throws Exception {
-        when(jpaWorkMonthQueryRepository.findAllByDate(any(YearMonth.class))).thenReturn(new ArrayList<>());
+        when(jpaWorkMonthQuery.findAllByDate(any(YearMonth.class))).thenReturn(new ArrayList<>());
         this.mockMvc.perform(get("/api/workmonth?year=%s&month=%s".formatted(WORK_MONTH_QUERY_DTO.date().getYear(), WORK_MONTH_QUERY_DTO.date().getMonthValue())))
                     .andExpect(status().is(200)).andExpect(jsonPath("$", is(new ArrayList<>())));
     }
@@ -78,25 +78,25 @@ public class WorkMonthQueryEndpointTest extends BaseEndpointTest {
     @Test
     @DisplayName("Endpoint Should Find All WorkMonths Without Date When Only Year Specified")
     void shouldNotFindWorkMonthsByDateWhenOnlyYearSpecified() throws Exception {
-        when(jpaWorkMonthQueryRepository.findAll()).thenReturn(new ArrayList<>());
+        when(jpaWorkMonthQuery.findAll()).thenReturn(new ArrayList<>());
 
         this.mockMvc.perform(get("/api/workmonth?year=%s&month=%s".formatted(WORK_MONTH_QUERY_DTO.date().getYear(), "")))
                     .andExpect(status().is(200)).andExpect(jsonPath("$", is(new ArrayList<>())));
 
-        verify(jpaWorkMonthQueryRepository, times(1)).findAll();
-        verify(jpaWorkMonthQueryRepository, times(0)).findAllByDate(any());
+        verify(jpaWorkMonthQuery, times(1)).findAll();
+        verify(jpaWorkMonthQuery, times(0)).findAllByDate(any());
     }
 
     @Test
     @DisplayName("Endpoint Should Find All WorkMonths Without Date When Only Month Specified")
     void shouldNotFindWorkMonthsByDateWhenOnlyMonthSpecified() throws Exception {
-        when(jpaWorkMonthQueryRepository.findAll()).thenReturn(new ArrayList<>());
+        when(jpaWorkMonthQuery.findAll()).thenReturn(new ArrayList<>());
 
         this.mockMvc.perform(get("/api/workmonth?year=%s&month=%s".formatted("", WORK_MONTH_QUERY_DTO.date().getMonthValue())))
                     .andExpect(status().is(200)).andExpect(jsonPath("$", is(new ArrayList<>())));
 
-        verify(jpaWorkMonthQueryRepository, times(1)).findAll();
-        verify(jpaWorkMonthQueryRepository, times(0)).findAllByDate(any());
+        verify(jpaWorkMonthQuery, times(1)).findAll();
+        verify(jpaWorkMonthQuery, times(0)).findAllByDate(any());
     }
 
     @Test
@@ -118,7 +118,7 @@ public class WorkMonthQueryEndpointTest extends BaseEndpointTest {
     @Test
     @DisplayName("Endpoint Should Find WorkMonth By UserId")
     void shouldFindWorkMonthByUserId() throws Exception {
-        when(jpaWorkMonthQueryRepository.findAllByUserId(any())).thenAnswer((arg) -> {
+        when(jpaWorkMonthQuery.findAllByUserId(any())).thenAnswer((arg) -> {
             final UUID userId = arg.getArgument(0);
             return userId.equals(WORK_MONTH_QUERY_DTO.userId()) ? List.of(WORK_MONTH_QUERY_DTO) : new ArrayList<>();
         });
@@ -152,7 +152,7 @@ public class WorkMonthQueryEndpointTest extends BaseEndpointTest {
     @Test
     @DisplayName("Endpoint Should Find WorkMonth By Id")
     void shouldFindWorkMonthById() throws Exception {
-        when(jpaWorkMonthQueryRepository.findById(any())).thenAnswer((arg) -> {
+        when(jpaWorkMonthQuery.findById(any())).thenAnswer((arg) -> {
             final UUID userId = arg.getArgument(0);
             return userId.equals(WORK_MONTH_QUERY_DTO.id()) ? Optional.of(WORK_MONTH_QUERY_DTO) : Optional.empty();
         });

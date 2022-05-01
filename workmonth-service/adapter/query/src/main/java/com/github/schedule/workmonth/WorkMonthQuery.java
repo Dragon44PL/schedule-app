@@ -10,12 +10,12 @@ import java.util.stream.Collectors;
 
 @Component
 @Transactional(readOnly = true)
-public class WorkMonthQueryRepository {
+public class WorkMonthQuery {
 
     private final WorkMonthEntityQueryRepository workMonthEntityQueryRepository;
     private final WorkMonthDtoConverter workMonthDtoConverter;
 
-    public WorkMonthQueryRepository(WorkMonthEntityQueryRepository workMonthEntityQueryRepository, WorkMonthDtoConverter workMonthDtoConverter) {
+    public WorkMonthQuery(WorkMonthEntityQueryRepository workMonthEntityQueryRepository, WorkMonthDtoConverter workMonthDtoConverter) {
         this.workMonthEntityQueryRepository = workMonthEntityQueryRepository;
         this.workMonthDtoConverter = workMonthDtoConverter;
     }

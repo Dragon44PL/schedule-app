@@ -8,6 +8,7 @@ import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -18,6 +19,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ComponentScan
 @SpringBootConfiguration
 @EnableAutoConfiguration
+@EnableJpaRepositories
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BaseEndpointTest {
 

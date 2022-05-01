@@ -4,6 +4,7 @@ import com.github.schedule.workmonth.converter.WorkMonthResponseConverter;
 import com.github.schedule.workmonth.dto.WorkMonthQueryDto;
 import com.github.schedule.workmonth.dto.response.WorkMonthResponseDto;
 import com.github.schedule.workmonth.validation.constraint.UniqueIdentifier;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -20,12 +21,13 @@ import java.util.stream.Collectors;
 
 @Validated
 @RestController
+@Tag(name = "Workmonth query")
 class WorkMonthQueryEndpoint {
 
-    private final JpaWorkMonthQueryRepository workMonthEntityQueryRepository;
+    private final WorkMonthQuery workMonthEntityQueryRepository;
     private final WorkMonthResponseConverter workMonthResponseConverter;
 
-    WorkMonthQueryEndpoint(JpaWorkMonthQueryRepository workMonthEntityQueryRepository, WorkMonthResponseConverter workMonthResponseConverter) {
+    WorkMonthQueryEndpoint(WorkMonthQuery workMonthEntityQueryRepository, WorkMonthResponseConverter workMonthResponseConverter) {
         this.workMonthEntityQueryRepository = workMonthEntityQueryRepository;
         this.workMonthResponseConverter = workMonthResponseConverter;
     }

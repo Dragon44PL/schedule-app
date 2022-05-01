@@ -16,9 +16,9 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
-public class WorkMonthQueryRepositoryTest {
+public class WorkMonthQueryTest {
 
-    private WorkMonthQueryRepository workMonthQueryRepository;
+    private WorkMonthQuery workMonthQuery;
 
     private WorkMonthEntityQueryRepository workMonthEntityQueryRepository;
 
@@ -48,7 +48,7 @@ public class WorkMonthQueryRepositoryTest {
             Creating WorkMonthQueryRepository
          */
 
-        this.workMonthQueryRepository = new WorkMonthQueryRepository(workMonthEntityQueryRepository, workMonthDtoConverter);
+        this.workMonthQuery = new WorkMonthQuery(workMonthEntityQueryRepository, workMonthDtoConverter);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class WorkMonthQueryRepositoryTest {
     void shouldFindAllWorkMonths() {
         when(workMonthEntityQueryRepository.findAll()).thenReturn(List.of(WORK_MONTH_ENTITY));
 
-        final List<WorkMonthQueryDto> workMonthQueryDto = workMonthQueryRepository.findAll();
+        final List<WorkMonthQueryDto> workMonthQueryDto = workMonthQuery.findAll();
         assertEquals(1, workMonthQueryDto.size());
     }
 
@@ -65,7 +65,7 @@ public class WorkMonthQueryRepositoryTest {
     void shouldNotFindWorkMonths() {
         when(workMonthEntityQueryRepository.findAll()).thenReturn(new ArrayList<>());
 
-        final List<WorkMonthQueryDto> workMonthQueryDto = workMonthQueryRepository.findAll();
+        final List<WorkMonthQueryDto> workMonthQueryDto = workMonthQuery.findAll();
         assertEquals(0, workMonthQueryDto.size());
     }
 
@@ -77,7 +77,7 @@ public class WorkMonthQueryRepositoryTest {
             return id.equals(WORK_MONTH_ENTITY.getId()) ? Optional.of(WORK_MONTH_ENTITY) : Optional.empty();
         });
 
-        final Optional<WorkMonthQueryDto> workMonthQueryDto = workMonthQueryRepository.findById(WORK_MONTH_ENTITY.getId());
+        final Optional<WorkMonthQueryDto> workMonthQueryDto = workMonthQuery.findById(WORK_MONTH_ENTITY.getId());
         assertTrue(workMonthQueryDto.isPresent());
     }
 
@@ -89,7 +89,7 @@ public class WorkMonthQueryRepositoryTest {
             return id.equals(WORK_MONTH_ENTITY.getId()) ? Optional.of(WORK_MONTH_ENTITY) : Optional.empty();
         });
 
-        final Optional<WorkMonthQueryDto> workMonthQueryDto = workMonthQueryRepository.findById(UUID.randomUUID());
+        final Optional<WorkMonthQueryDto> workMonthQueryDto = workMonthQuery.findById(UUID.randomUUID());
         assertFalse(workMonthQueryDto.isPresent());
     }
 
@@ -101,7 +101,7 @@ public class WorkMonthQueryRepositoryTest {
             return id.equals(WORK_MONTH_ENTITY.getUserId()) ? List.of(WORK_MONTH_ENTITY) : new ArrayList<>();
         });
 
-        final List<WorkMonthQueryDto> workMonthQueryDto = workMonthQueryRepository.findAllByUserId(WORK_MONTH_ENTITY.getUserId());
+        final List<WorkMonthQueryDto> workMonthQueryDto = workMonthQuery.findAllByUserId(WORK_MONTH_ENTITY.getUserId());
         assertEquals(1, workMonthQueryDto.size());
     }
 
@@ -113,7 +113,7 @@ public class WorkMonthQueryRepositoryTest {
             return id.equals(WORK_MONTH_ENTITY.getUserId()) ? List.of(WORK_MONTH_ENTITY) : new ArrayList<>();
         });
 
-        final List<WorkMonthQueryDto> workMonthQueryDto = workMonthQueryRepository.findAllByUserId(UUID.randomUUID());
+        final List<WorkMonthQueryDto> workMonthQueryDto = workMonthQuery.findAllByUserId(UUID.randomUUID());
         assertEquals(0, workMonthQueryDto.size());
     }
 
@@ -125,7 +125,7 @@ public class WorkMonthQueryRepositoryTest {
             return yearMonth.equals(WORK_MONTH_ENTITY.getDate()) ? List.of(WORK_MONTH_ENTITY) : new ArrayList<>();
         });
 
-        final List<WorkMonthQueryDto> workMonthQueryDto = workMonthQueryRepository.findAllByDate(WORK_MONTH_ENTITY.getDate());
+        final List<WorkMonthQueryDto> workMonthQueryDto = workMonthQuery.findAllByDate(WORK_MONTH_ENTITY.getDate());
         assertEquals(1, workMonthQueryDto.size());
     }
 
@@ -137,7 +137,7 @@ public class WorkMonthQueryRepositoryTest {
             return yearMonth.equals(WORK_MONTH_ENTITY.getDate()) ? List.of(WORK_MONTH_ENTITY) : new ArrayList<>();
         });
 
-        final List<WorkMonthQueryDto> workMonthQueryDto = workMonthQueryRepository.findAllByDate(WORK_MONTH_ENTITY.getDate().plusMonths(1));
+        final List<WorkMonthQueryDto> workMonthQueryDto = workMonthQuery.findAllByDate(WORK_MONTH_ENTITY.getDate().plusMonths(1));
         assertEquals(0, workMonthQueryDto.size());
     }
 }
