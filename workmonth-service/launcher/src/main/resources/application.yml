@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: workmonth-service
+  cloud:
+    config:
+      name: microservices
+  config:
+    import: optional:configserver:http://localhost:8888
