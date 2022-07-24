@@ -11,7 +11,7 @@ import java.lang.annotation.Annotation;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class ConstraintViolationExceptionHandler {
+class ConstraintViolationExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     ResponseEntity<?> handleConstraintViolationException(ConstraintViolationException exception) {

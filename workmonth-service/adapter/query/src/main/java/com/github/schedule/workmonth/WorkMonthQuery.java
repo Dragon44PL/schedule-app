@@ -10,34 +10,32 @@ import java.util.stream.Collectors;
 
 @Component
 @Transactional(readOnly = true)
-public class WorkMonthQuery {
+class WorkMonthQuery {
 
     private final WorkMonthEntityQueryRepository workMonthEntityQueryRepository;
-    private final WorkMonthDtoConverter workMonthDtoConverter;
 
-    public WorkMonthQuery(WorkMonthEntityQueryRepository workMonthEntityQueryRepository, WorkMonthDtoConverter workMonthDtoConverter) {
+    WorkMonthQuery(WorkMonthEntityQueryRepository workMonthEntityQueryRepository) {
         this.workMonthEntityQueryRepository = workMonthEntityQueryRepository;
-        this.workMonthDtoConverter = workMonthDtoConverter;
     }
 
-    public List<WorkMonthQueryDto> findAll() {
+    List<WorkMonthQueryDto> findAll() {
         final List<WorkMonthEntity> workMonths = workMonthEntityQueryRepository.findAll();
-        return workMonths.stream().map(workMonthDtoConverter::workMonthDto).collect(Collectors.toList());
+        return workMonths.stream().map(WorkMonthDtoConverter::workMonthDto).collect(Collectors.toList());
     }
 
-    public List<WorkMonthQueryDto> findAllByDate(YearMonth yearMonth) {
+    List<WorkMonthQueryDto> findAllByDate(YearMonth yearMonth) {
         final List<WorkMonthEntity> workMonthEntity = workMonthEntityQueryRepository.findAllByDate(yearMonth);
-        return workMonthEntity.stream().map(workMonthDtoConverter::workMonthDto).collect(Collectors.toList());
+        return workMonthEntity.stream().map(WorkMonthDtoConverter::workMonthDto).collect(Collectors.toList());
     }
 
-    public Optional<WorkMonthQueryDto> findById(UUID id) {
+    Optional<WorkMonthQueryDto> findById(UUID id) {
         final Optional<WorkMonthEntity> workMonthEntity = workMonthEntityQueryRepository.findById(id);
-        return workMonthEntity.map(workMonthDtoConverter::workMonthDto);
+        return workMonthEntity.map(WorkMonthDtoConverter::workMonthDto);
     }
 
     public List<WorkMonthQueryDto> findAllByUserId(UUID id) {
         final List<WorkMonthEntity> workMonthEntity = workMonthEntityQueryRepository.findAllByUserId(id);
-        return workMonthEntity.stream().map(workMonthDtoConverter::workMonthDto).collect(Collectors.toList());
+        return workMonthEntity.stream().map(WorkMonthDtoConverter::workMonthDto).collect(Collectors.toList());
     }
 
 }

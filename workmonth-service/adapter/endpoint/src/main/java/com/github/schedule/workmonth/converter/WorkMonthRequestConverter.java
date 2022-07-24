@@ -16,27 +16,26 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Component
 public class WorkMonthRequestConverter {
 
-    public WorkMonthCreateCommand convertWorkMonthCreateCommand(WorkMonthCreateDto workMonthCreateDto) {
+    public static WorkMonthCreateCommand convertWorkMonthCreateCommand(WorkMonthCreateDto workMonthCreateDto) {
         final YearMonth yearMonth = YearMonth.of(workMonthCreateDto.getYear(), workMonthCreateDto.getMonth());
         final UserId userId = new UserId(UUID.fromString(workMonthCreateDto.getUserId()));
         return new WorkMonthCreateCommand(yearMonth, userId);
     }
 
-    public WorkDaysChangeCommand convertWorkDaysChangedCommand(String id, WorkDaysChangeDto workDaysChangeDto) {
-        final Set<WorkDay> workDays = workDaysChangeDto.getWorkDays().stream().map(this::convertWorkDay).collect(Collectors.toSet());
+    public static WorkDaysChangeCommand convertWorkDaysChangedCommand(String id, WorkDaysChangeDto workDaysChangeDto) {
+        final Set<WorkDay> workDays = workDaysChangeDto.getWorkDays().stream().map(WorkMonthRequestConverter::convertWorkDay).collect(Collectors.toSet());
         return new WorkDaysChangeCommand(UUID.fromString(id), workDays);
     }
 
-    public WorkDay convertWorkDay(WorkDayRequestDto workDayRequestDto) {
-        final WorkHour startingHour = this.convertWorkHour(workDayRequestDto.getStartingHour());
-        final WorkHour endingHour = this.convertWorkHour(workDayRequestDto.getEndingHour());
+    static WorkDay convertWorkDay(WorkDayRequestDto workDayRequestDto) {
+        final WorkHour startingHour = WorkMonthRequestConverter.convertWorkHour(workDayRequestDto.getStartingHour());
+        final WorkHour endingHour = WorkMonthRequestConverter.convertWorkHour(workDayRequestDto.getEndingHour());
         return new WorkDay(workDayRequestDto.getDate(), startingHour, endingHour, workDayRequestDto.getLeave());
     }
 
-    public WorkHour convertWorkHour(WorkHourRequestDto workHourRequestDto) {
+    static WorkHour convertWorkHour(WorkHourRequestDto workHourRequestDto) {
         return new WorkHour(workHourRequestDto.getHour(), workHourRequestDto.getMinute());
     }
 }
