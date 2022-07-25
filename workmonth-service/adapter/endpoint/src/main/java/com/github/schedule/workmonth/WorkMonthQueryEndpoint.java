@@ -5,6 +5,7 @@ import com.github.schedule.workmonth.dto.WorkMonthQueryDto;
 import com.github.schedule.workmonth.dto.response.WorkMonthResponseDto;
 import com.github.schedule.workmonth.validation.constraint.UniqueIdentifier;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,16 +22,11 @@ import java.util.stream.Collectors;
 
 @Validated
 @RestController
-@Tag(name = "Workmonth query")
+@RequiredArgsConstructor
+@Tag(name = "Workmonth query endpoint")
 class WorkMonthQueryEndpoint {
 
     private final WorkMonthQuery workMonthEntityQueryRepository;
-    private final WorkMonthResponseConverter workMonthResponseConverter;
-
-    WorkMonthQueryEndpoint(WorkMonthQuery workMonthEntityQueryRepository, WorkMonthResponseConverter workMonthResponseConverter) {
-        this.workMonthEntityQueryRepository = workMonthEntityQueryRepository;
-        this.workMonthResponseConverter = workMonthResponseConverter;
-    }
 
     @GetMapping(value = "/api/workmonth", produces = MediaType.APPLICATION_JSON_VALUE)
     List<WorkMonthResponseDto> findAll(@RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month) {
@@ -38,21 +34,24 @@ class WorkMonthQueryEndpoint {
                 ? workMonthEntityQueryRepository.findAllByDate(YearMonth.of(year, month))
                 : workMonthEntityQueryRepository.findAll();
 
-        return query.stream().map(workMonthResponseConverter::convertWorkMonthResponseDto).collect(Collectors.toList());
+        return query.stream()
+                .map(WorkMonthResponseConverter::convertWorkMonthResponseDto)
+                .collect(Collectors.toList());
     }
-
 
     @GetMapping(value = "/api/workmonth/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<?> findById(@Valid @PathVariable @NotBlank @UniqueIdentifier String id) {
         final Optional<WorkMonthQueryDto> workMonthDto = workMonthEntityQueryRepository.findById(UUID.fromString(id));
         return workMonthDto.isPresent()
-                ? ResponseEntity.ok(workMonthResponseConverter.convertWorkMonthResponseDto(workMonthDto.get()))
+                ? ResponseEntity.ok(WorkMonthResponseConverter.convertWorkMonthResponseDto(workMonthDto.get()))
                 : ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/api/workmonth/user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     List<WorkMonthResponseDto> findByUser(@Valid @PathVariable @NotBlank @UniqueIdentifier String id) {
         final List<WorkMonthQueryDto> query = workMonthEntityQueryRepository.findAllByUserId(UUID.fromString(id));
-        return query.stream().map(workMonthResponseConverter::convertWorkMonthResponseDto).collect(Collectors.toList());
+        return query.stream()
+                .map(WorkMonthResponseConverter::convertWorkMonthResponseDto)
+                .collect(Collectors.toList());
     }
 }

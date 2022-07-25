@@ -5,20 +5,16 @@ import com.github.schedule.workmonth.event.TotalHoursCalculatedEvent;
 import com.github.schedule.workmonth.event.WorkDaysChangedEvent;
 import com.github.schedule.workmonth.event.WorkMonthCreatedEvent;
 import com.github.schedule.workmonth.event.WorkMonthEvent;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 class PersistenceWorkMonthHandler implements DomainEventHandler<WorkMonthEvent> {
 
     private final WorkMonthCreatedHandler workMonthCreatedHandler;
     private final WorkDaysChangedHandler workDaysChangedHandler;
     private final TotalHoursCalculatedHandler totalHoursCalculatedHandler;
-
-    PersistenceWorkMonthHandler(WorkMonthCreatedHandler workMonthCreatedHandler, WorkDaysChangedHandler workDaysChangedHandler, TotalHoursCalculatedHandler totalHoursCalculatedHandler) {
-        this.workMonthCreatedHandler = workMonthCreatedHandler;
-        this.workDaysChangedHandler = workDaysChangedHandler;
-        this.totalHoursCalculatedHandler = totalHoursCalculatedHandler;
-    }
 
     @Override
     public void handle(WorkMonthEvent workMonthEvent) {

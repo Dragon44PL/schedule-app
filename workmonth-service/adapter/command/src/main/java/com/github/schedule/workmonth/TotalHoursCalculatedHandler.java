@@ -3,18 +3,16 @@ package com.github.schedule.workmonth;
 import com.github.schedule.core.events.DomainEventHandler;
 import com.github.schedule.workmonth.event.TotalHoursCalculatedEvent;
 import com.github.schedule.workmonth.vo.WorkHour;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 class TotalHoursCalculatedHandler implements DomainEventHandler<TotalHoursCalculatedEvent> {
 
     private final WorkMonthEntityRepository workMonthEntityRepository;
-
-    TotalHoursCalculatedHandler(WorkMonthEntityRepository workMonthEntityRepository) {
-        this.workMonthEntityRepository = workMonthEntityRepository;
-    }
 
     @Override
     public void handle(TotalHoursCalculatedEvent totalHoursCalculatedEvent) {

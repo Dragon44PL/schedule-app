@@ -8,6 +8,7 @@ import com.github.schedule.workmonth.dto.request.workmonth.WorkMonthCreateDto;
 import com.github.schedule.workmonth.event.WorkMonthEvent;
 import com.github.schedule.workmonth.validation.constraint.UniqueIdentifier;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,20 +23,15 @@ import java.util.UUID;
 
 @Validated
 @RestController
-@Tag(name = "Workmonth command")
+@RequiredArgsConstructor
+@Tag(name = "Workmonth command endpoint")
 class WorkMonthCommandEndpoint {
 
     private final WorkMonthFacade workMonthFacade;
-    private final WorkMonthRequestConverter workMonthRequestConverter;
-
-    WorkMonthCommandEndpoint(WorkMonthFacade workMonthFacade, WorkMonthRequestConverter workMonthRequestConverter) {
-        this.workMonthFacade = workMonthFacade;
-        this.workMonthRequestConverter = workMonthRequestConverter;
-    }
 
     @PostMapping(value = "/api/workmonth", consumes = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<?> createWorkMonth(@RequestBody @Valid WorkMonthCreateDto workMonthCreateDto) {
-        final WorkMonthCreateCommand workMonthCreateCommand = workMonthRequestConverter.convertWorkMonthCreateCommand(workMonthCreateDto);
+        final WorkMonthCreateCommand workMonthCreateCommand = WorkMonthRequestConverter.convertWorkMonthCreateCommand(workMonthCreateDto);
         final List<WorkMonthEvent> workMonthEvents = workMonthFacade.createWorkMonth(workMonthCreateCommand);
         return workMonthEvents.size() != 0
                 ? redirect(workMonthEvents.get(0).aggregateId(), HttpStatus.CREATED)
@@ -44,7 +40,7 @@ class WorkMonthCommandEndpoint {
 
     @PutMapping(value = "/api/workmonth/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<?> changeWorkDays(@Valid @PathVariable @NotBlank @UniqueIdentifier String id, @Valid @RequestBody WorkDaysChangeDto workDaysChangeDto) {
-        final WorkDaysChangeCommand workDaysChangeCommand = workMonthRequestConverter.convertWorkDaysChangedCommand(id, workDaysChangeDto);
+        final WorkDaysChangeCommand workDaysChangeCommand = WorkMonthRequestConverter.convertWorkDaysChangedCommand(id, workDaysChangeDto);
         final List<WorkMonthEvent> workMonthEvents = workMonthFacade.updateWorkDays(workDaysChangeCommand);
         return workMonthEvents.size() != 0
                 ? redirect(workMonthEvents.get(0).aggregateId(), HttpStatus.OK)

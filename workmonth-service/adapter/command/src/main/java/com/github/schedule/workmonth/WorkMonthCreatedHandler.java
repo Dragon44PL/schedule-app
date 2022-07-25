@@ -4,6 +4,7 @@ import com.github.schedule.core.events.DomainEventHandler;
 import com.github.schedule.workmonth.event.WorkMonthCreatedEvent;
 import com.github.schedule.workmonth.vo.WorkDay;
 import com.github.schedule.workmonth.vo.WorkHour;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -12,18 +13,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 class WorkMonthCreatedHandler implements DomainEventHandler<WorkMonthCreatedEvent> {
 
     private final WorkMonthEntityRepository workMonthEntityRepository;
 
-    WorkMonthCreatedHandler(WorkMonthEntityRepository workMonthEntityRepository) {
-        this.workMonthEntityRepository = workMonthEntityRepository;
-    }
-
     @Override
     public void handle(WorkMonthCreatedEvent workMonthCreatedEvent) {
         final Set<WorkDayEntity> workDays = workMonthCreatedEvent.workDays().stream()
-                                                                 .map(this::workDay).collect(Collectors.toSet());
+                    .map(WorkMonthCreatedHandler::workDay)
+                    .collect(Collectors.toSet());
 
         final WorkHour workHour = workMonthCreatedEvent.totalHours();
         final WorkMonthEntity workMonthEntity = WorkMonthEntity.builder()
@@ -38,7 +37,7 @@ class WorkMonthCreatedHandler implements DomainEventHandler<WorkMonthCreatedEven
         workMonthEntityRepository.saveAndFlush(workMonthEntity);
     }
 
-    private WorkDayEntity workDay(WorkDay workDay) {
+    private static WorkDayEntity workDay(WorkDay workDay) {
         final LocalDate date = workDay.date();
         return WorkDayEntity.builder()
                 .date(date)
@@ -48,7 +47,7 @@ class WorkMonthCreatedHandler implements DomainEventHandler<WorkMonthCreatedEven
                 .build();
     }
 
-    private LocalDateTime localDateTime(LocalDate date, WorkHour workHour) {
+    private static LocalDateTime localDateTime(LocalDate date, WorkHour workHour) {
         return LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), workHour.hours(), workHour.minutes());
     }
 
