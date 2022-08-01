@@ -39,16 +39,10 @@ public class WorkMonthQueryTest {
         this.workMonthEntityQueryRepository = Mockito.mock(WorkMonthEntityQueryRepository.class);
 
         /*
-            Creating WorkMonthDtoConverter
-         */
-
-        WorkMonthDtoConverter workMonthDtoConverter = new WorkMonthDtoConverter();
-
-        /*
             Creating WorkMonthQueryRepository
          */
 
-        this.workMonthQuery = new WorkMonthQuery(workMonthEntityQueryRepository, workMonthDtoConverter);
+        this.workMonthQuery = new WorkMonthQuery(workMonthEntityQueryRepository);
     }
 
     @Test
