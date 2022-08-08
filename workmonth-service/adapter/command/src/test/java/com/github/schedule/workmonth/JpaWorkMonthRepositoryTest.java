@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.YearMonth;
@@ -39,8 +38,6 @@ class JpaWorkMonthRepositoryTest {
 
     private static PersistenceWorkMonthHandler workMonthHandler;
 
-    private static WorkMonthEntityConverter workMonthEntityConverter;
-
     private static JpaWorkMonthRepository workMonthRepository;
 
     @BeforeAll
@@ -59,11 +56,7 @@ class JpaWorkMonthRepositoryTest {
         workMonthHandler = Mockito.mock(PersistenceWorkMonthHandler.class);
         doNothing().when(workMonthHandler).handle(any());
 
-        // Creating WorkMonthEntityConverter
-        workMonthEntityConverter = Mockito.mock(WorkMonthEntityConverter.class);
-        when(workMonthEntityConverter.convertWorkMonth(any())).thenReturn(WorkMonth.restore(EXISTS_ID, new UserId(EXISTS_ID), YearMonth.now(), new HashSet<>()));
-
-        workMonthRepository = new JpaWorkMonthRepository(workMonthEntityRepository, workMonthHandler, workMonthEntityConverter);
+        workMonthRepository = new JpaWorkMonthRepository(workMonthEntityRepository, workMonthHandler);
     }
 
     @Test
