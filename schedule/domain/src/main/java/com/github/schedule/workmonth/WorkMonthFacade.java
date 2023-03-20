@@ -1,12 +1,14 @@
 package com.github.schedule.workmonth;
 
-import com.github.schedule.workmonth.command.WorkDaysChangeCommand;
-import com.github.schedule.workmonth.command.WorkMonthCreateCommand;
+import com.github.schedule.workmonth.dto.WorkDaysChangeCommand;
+import com.github.schedule.workmonth.dto.WorkMonthCreateCommand;
 import com.github.schedule.workmonth.event.WorkDaysChangedEvent;
 import com.github.schedule.workmonth.event.WorkMonthEvent;
 import com.github.schedule.workmonth.exception.WorkDayOutOfRangeException;
 import com.github.schedule.workmonth.exception.WorkMonthExistsException;
+import com.github.schedule.workmonth.vo.UserId;
 
+import java.time.YearMonth;
 import java.util.*;
 
 public class WorkMonthFacade {
@@ -18,9 +20,7 @@ public class WorkMonthFacade {
     }
 
     public List<WorkMonthEvent> createWorkMonth(WorkMonthCreateCommand workMonthCreateCommand) throws WorkMonthExistsException {
-        final Optional<WorkMonth> found = workMonthRepository.findByUser(workMonthCreateCommand.userId(), workMonthCreateCommand.yearMonth());
-        found.ifPresent(f -> { throw new WorkMonthExistsException(); });
-
+        validateWorkMonthAlreadyPresent(workMonthCreateCommand.userId(), workMonthCreateCommand.yearMonth());
         final WorkMonth workMonth = WorkMonth.create(UUID.randomUUID(), workMonthCreateCommand.userId(), workMonthCreateCommand.yearMonth());
         workMonthRepository.save(workMonth);
         return workMonth.findLatestEvent().stream().toList();
@@ -46,5 +46,14 @@ public class WorkMonthFacade {
     private List<WorkMonthEvent> filledWorkDaysChangedEvent(WorkDaysChangeCommand workDaysChangeCommand) {
         final WorkDaysChangedEvent event = new WorkDaysChangedEvent(workDaysChangeCommand.id(), workDaysChangeCommand.workDays());
         return new ArrayList<>(Collections.singleton(event));
+    }
+
+    private void validateWorkMonthAlreadyPresent(UserId userId, YearMonth yearMonth) {
+        final Optional<WorkMonth> requestedWorkMonth = workMonthRepository.findByUser(userId, yearMonth);
+        requestedWorkMonth.ifPresent(found -> {
+            throw new WorkMonthExistsException(
+                String.format("There is already present WorkMonth for userId = '%s', year = '%s' and month = '%s'", userId, yearMonth.getYear(), yearMonth.getMonthValue())
+            );
+        });
     }
 }

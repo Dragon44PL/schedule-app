@@ -1,4 +1,4 @@
-package com.github.schedule.workmonth.command;
+package com.github.schedule.workmonth.dto;
 
 import com.github.schedule.workmonth.vo.UserId;
 
