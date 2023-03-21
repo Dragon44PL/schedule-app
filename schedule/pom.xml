@@ -5,22 +5,19 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>schedule</artifactId>
+        <artifactId>schedule-app</artifactId>
         <groupId>com.github</groupId>
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>workmonth</artifactId>
-    <name>workmonth</name>
     <version>${parent.version}</version>
+    <artifactId>schedule</artifactId>
 
     <packaging>pom</packaging>
 
     <modules>
         <module>domain</module>
-        <module>app</module>
-
-        <module>adapter</module>
+        <module>infrastructure</module>
         <module>launcher</module>
     </modules>
 
