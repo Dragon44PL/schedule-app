@@ -11,26 +11,25 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.github.schedule.workmonth</groupId>
-    <artifactId>adapter</artifactId>
-    <name>workmonth-adapter</name>
+    <groupId>com.github.schedule</groupId>
+    <artifactId>infrastructure</artifactId>
+    <name>schedule-infrastructure</name>
     <version>1.0.0</version>
 
     <packaging>pom</packaging>
 
     <modules>
-        <module>entities</module>
-        <module>command</module>
+        <module>command-persistence-adapter</module>
         <module>query</module>
-        <module>endpoint</module>
+        <module>web</module>
     </modules>
 
     <dependencies>
 
         <dependency>
-            <groupId>com.github.schedule.workmonth</groupId>
-            <artifactId>app</artifactId>
-            <version>1.0.0</version>
+            <groupId>com.github.schedule</groupId>
+            <artifactId>domain</artifactId>
+            <version>${version}</version>
         </dependency>
 
     </dependencies>
