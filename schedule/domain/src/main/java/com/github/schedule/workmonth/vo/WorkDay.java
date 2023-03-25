@@ -36,7 +36,7 @@ public record WorkDay(LocalDate date, WorkHour startingHour, WorkHour endingHour
 
     public boolean contentChanged(WorkDay another) {
         return !this.startingHour.equals(another.startingHour) ||
-                !this.endingHour.equals(another.endingHour) ||
+               !this.endingHour.equals(another.endingHour) ||
                 this.isLeave != another.isLeave;
     }
 
