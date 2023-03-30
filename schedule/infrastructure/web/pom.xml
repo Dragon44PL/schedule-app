@@ -11,9 +11,9 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.github.schedule.workmonth.adapter</groupId>
-    <artifactId>endpoint</artifactId>
-    <name>workmonth-endpoint</name>
+    <groupId>com.github.schedule.infrastructure</groupId>
+    <artifactId>web</artifactId>
+    <name>schedule-web</name>
     <version>1.0.0</version>
 
     <properties>
@@ -23,13 +23,13 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.github.schedule.workmonth.adapter</groupId>
-            <artifactId>command</artifactId>
+            <groupId>com.github.schedule.infrastructure</groupId>
+            <artifactId>command-persistence-adapter</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.github.schedule.workmonth.adapter</groupId>
+            <groupId>com.github.schedule.infrastructure</groupId>
             <artifactId>query</artifactId>
             <version>${project.version}</version>
         </dependency>
