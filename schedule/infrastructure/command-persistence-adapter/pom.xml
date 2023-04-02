@@ -5,26 +5,26 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.github.schedule.workmonth</groupId>
-        <artifactId>adapter</artifactId>
+        <groupId>com.github.schedule</groupId>
+        <artifactId>infrastructure</artifactId>
         <version>1.0.0</version>
     </parent>
 
-    <groupId>com.github.schedule.workmonth.adapter</groupId>
-    <artifactId>command</artifactId>
-    <name>workmonth-command</name>
+    <groupId>com.github.schedule.infrastructure</groupId>
+    <artifactId>command-persistence-adapter</artifactId>
+    <name>schedule-command-persistence-adapter</name>
     <version>${parent.version}</version>
 
     <properties>
-        <java.version>16</java.version>
+        <java.version>18</java.version>
     </properties>
 
     <dependencies>
 
         <dependency>
-            <groupId>com.github.schedule.workmonth.adapter</groupId>
-            <artifactId>entities</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.github.schedule</groupId>
+            <artifactId>domain</artifactId>
+            <version>${version}</version>
         </dependency>
 
         <dependency>
@@ -40,14 +40,13 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-            <version>3.1.1</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
         <dependency>
