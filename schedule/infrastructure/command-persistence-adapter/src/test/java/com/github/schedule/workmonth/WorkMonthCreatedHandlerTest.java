@@ -62,7 +62,7 @@ class WorkMonthCreatedHandlerTest {
         assertNotNull(workMonthEntity);
         assertEquals(workMonthCreatedEvent.aggregateId(), workMonthEntity.getId());
         assertEquals(workMonthCreatedEvent.userId().id(), workMonthEntity.getUserId());
-        assertEquals(workMonthCreatedEvent.yearMonth(), workMonthEntity.getDate());
+        assertEquals(workMonthCreatedEvent.yearMonth(), YearMonth.of(workMonthEntity.getYearMonth().getYear(), workMonthEntity.getYearMonth().getMonth()));
         assertEquals(workMonthCreatedEvent.totalHours().hours(), workMonthEntity.getTotalHours().getHours());
         assertEquals(workMonthCreatedEvent.totalHours().minutes(), workMonthEntity.getTotalHours().getMinutes());
         workMonthEntity.getWorkDays().forEach(workDayEntity -> checkWorkDayEntity(workDays, workMonthEntity, workDayEntity));

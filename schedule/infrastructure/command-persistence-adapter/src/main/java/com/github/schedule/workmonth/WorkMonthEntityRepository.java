@@ -7,5 +7,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 interface WorkMonthEntityRepository extends JpaRepository<WorkMonthEntity, UUID>  {
-    Optional<WorkMonthEntity> findByUserIdAndDate(UUID id, YearMonth date);
+    Optional<WorkMonthEntity> findByUserIdAndYearMonth(UUID id, YearMonthEntity yearMonth);
 }

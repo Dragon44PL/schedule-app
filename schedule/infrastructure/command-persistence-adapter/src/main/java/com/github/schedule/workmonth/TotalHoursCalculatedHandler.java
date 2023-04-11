@@ -1,6 +1,9 @@
 package com.github.schedule.workmonth;
 
 import com.github.schedule.core.events.DomainEventHandler;
+import com.github.schedule.workmonth.WorkHourEntity;
+import com.github.schedule.workmonth.WorkMonthEntity;
+import com.github.schedule.workmonth.WorkMonthEntityRepository;
 import com.github.schedule.workmonth.event.TotalHoursCalculatedEvent;
 import com.github.schedule.workmonth.vo.WorkHour;
 import lombok.RequiredArgsConstructor;

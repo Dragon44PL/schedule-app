@@ -22,9 +22,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ActiveProfiles("dev")
-class PersistenceWorkMonthHandlerTest {
+class WorkMonthEventHandlerTest {
 
-    private static PersistenceWorkMonthHandler persistenceWorkMonthHandler;
+    private static WorkMonthEventHandler workMonthEventHandler;
 
     /*
         Mocks
@@ -50,14 +50,14 @@ class PersistenceWorkMonthHandlerTest {
         workDaysChangedHandler = Mockito.mock(WorkDaysChangedHandler.class);
         doNothing().when(workDaysChangedHandler).handle(any(WorkDaysChangedEvent.class));
 
-        persistenceWorkMonthHandler = new PersistenceWorkMonthHandler(workMonthCreatedHandler, workDaysChangedHandler, totalHoursCalculatedHandler);
+        workMonthEventHandler = new WorkMonthEventHandler(workMonthCreatedHandler, workDaysChangedHandler, totalHoursCalculatedHandler);
     }
 
     @Test
     @DisplayName("Should Execute 'handle' of TotalHoursCalculatedHandler When TotalHoursCalculatedEvent Passed")
     void shouldExecuteTotalHoursCalculatedHandler() {
         final var totalHoursCalculatedEvent = new TotalHoursCalculatedEvent(UUID.randomUUID(), WorkHour.zero());
-        persistenceWorkMonthHandler.handle(totalHoursCalculatedEvent);
+        workMonthEventHandler.handle(totalHoursCalculatedEvent);
 
         verify(totalHoursCalculatedHandler, times(1)).handle(any(TotalHoursCalculatedEvent.class));
     }
@@ -66,7 +66,7 @@ class PersistenceWorkMonthHandlerTest {
     @DisplayName("Should Execute 'handle' of WorkMonthCreatedHandler When WorkMonthCreatedEvent Passed")
     void shouldExecuteWorkMonthCreatedHandler() {
         final var workMonthCreatedEvent = new WorkMonthCreatedEvent(UUID.randomUUID(), new UserId(UUID.randomUUID()), YearMonth.now(), WorkHour.zero(), new HashSet<>());
-        persistenceWorkMonthHandler.handle(workMonthCreatedEvent);
+        workMonthEventHandler.handle(workMonthCreatedEvent);
 
         verify(workMonthCreatedHandler, times(1)).handle(any(WorkMonthCreatedEvent.class));
     }
@@ -75,7 +75,7 @@ class PersistenceWorkMonthHandlerTest {
     @DisplayName("Should Execute 'handle' of WorkMonthUpdatedHandler When WorkDayUpdatedEvent Passed")
     void shouldExecuteWorkDayUpdatedHandler() {
         final var workDayUpdatedEvent = new WorkDaysChangedEvent(UUID.randomUUID(), Set.of(new WorkDay(LocalDate.now(), false)));
-        persistenceWorkMonthHandler.handle(workDayUpdatedEvent);
+        workMonthEventHandler.handle(workDayUpdatedEvent);
 
         verify(workDaysChangedHandler, times(1)).handle(any(WorkDaysChangedEvent.class));
     }

@@ -65,7 +65,7 @@ class WorkDaysChangedHandlerTest {
         final WorkDayEntity firstWorkDayEntity = WorkDayEntity.builder().date(LocalDate.now()).startingHour(localDateTime).endingHour(localDateTime).build();
         final WorkDayEntity secondWorkDayEntity = WorkDayEntity.builder().date(LocalDate.now().plusDays(1)).startingHour(localDateTime).endingHour(localDateTime).build();
 
-        final WorkMonthEntity workMonthEntity = WorkMonthEntity.builder().id(UUID.randomUUID()).date(YearMonth.now()).workDays(Set.of(firstWorkDayEntity, secondWorkDayEntity))
+        final WorkMonthEntity workMonthEntity = WorkMonthEntity.builder().id(UUID.randomUUID()).yearMonth(new YearMonthEntity(YearMonth.now().getYear(), YearMonth.now().getMonthValue())).workDays(Set.of(firstWorkDayEntity, secondWorkDayEntity))
                                                             .totalHours(workHourEntity).build();
 
         when(workMonthEntityRepository.findById(any())).thenReturn(Optional.of(workMonthEntity));

@@ -28,7 +28,7 @@ class TotalHoursCalculatedHandlerTest {
         Data
      */
 
-    private final WorkMonthEntity WORK_MONTH_ENTITY = WorkMonthEntity.builder().id(UUID.randomUUID()).date(YearMonth.now()).workDays(new HashSet<>())
+    private final WorkMonthEntity WORK_MONTH_ENTITY = WorkMonthEntity.builder().id(UUID.randomUUID()).yearMonth(new YearMonthEntity(YearMonth.now().getYear(), YearMonth.now().getMonthValue())).workDays(new HashSet<>())
                                                                     .totalHours(WorkHourEntity.builder().hours(10).minutes(10).build()).build();
 
     @InjectMocks
@@ -57,7 +57,7 @@ class TotalHoursCalculatedHandlerTest {
         final WorkMonthEntity captured = workMonthEntityCaptor.getValue();
         assertNotNull(captured);
         assertEquals(captured.getId(), WORK_MONTH_ENTITY.getId());
-        assertEquals(captured.getDate(), WORK_MONTH_ENTITY.getDate());
+        assertEquals(captured.getYearMonth(), WORK_MONTH_ENTITY.getYearMonth());
         assertEquals(captured.getWorkDays(), WORK_MONTH_ENTITY.getWorkDays());
         assertEquals(captured.getTotalHours().getHours(), event.totalWorkHours().hours());
         assertEquals(captured.getTotalHours().getMinutes(), event.totalWorkHours().minutes());

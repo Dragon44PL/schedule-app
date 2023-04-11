@@ -4,6 +4,7 @@ import com.github.schedule.workmonth.vo.UserId;
 import com.github.schedule.workmonth.vo.WorkDay;
 import com.github.schedule.workmonth.vo.WorkHour;
 
+import java.time.YearMonth;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,7 +12,8 @@ class WorkMonthEntityConverter {
 
     static WorkMonth convertWorkMonth(WorkMonthEntity workMonthEntity) {
         final Set<WorkDay> workDays = workMonthEntity.getWorkDays().stream().map(WorkMonthEntityConverter::convertWorkDay).collect(Collectors.toSet());
-        return WorkMonth.restore(workMonthEntity.getId(), new UserId(workMonthEntity.getUserId()), workMonthEntity.getDate(), workDays);
+        final YearMonthEntity yearMonth = workMonthEntity.getYearMonth();
+        return WorkMonth.restore(workMonthEntity.getId(), new UserId(workMonthEntity.getUserId()), YearMonth.of(yearMonth.getYear(), yearMonth.getMonth()), workDays);
     }
 
     static WorkDay convertWorkDay(WorkDayEntity workDayEntity) {

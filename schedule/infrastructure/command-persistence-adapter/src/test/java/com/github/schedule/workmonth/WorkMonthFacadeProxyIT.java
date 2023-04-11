@@ -1,7 +1,7 @@
 package com.github.schedule.workmonth;
 
-import com.github.schedule.workmonth.command.WorkDaysChangeCommand;
-import com.github.schedule.workmonth.command.WorkMonthCreateCommand;
+import com.github.schedule.workmonth.dto.WorkDaysChangeCommand;
+import com.github.schedule.workmonth.dto.WorkMonthCreateCommand;
 import com.github.schedule.workmonth.event.TotalHoursCalculatedEvent;
 import com.github.schedule.workmonth.event.WorkDaysChangedEvent;
 import com.github.schedule.workmonth.event.WorkMonthCreatedEvent;
@@ -13,13 +13,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -90,7 +87,7 @@ public class WorkMonthFacadeProxyIT {
 
     private void compareWorkMonthEntityAndWorkMonthCreatedEvent(WorkMonthCreatedEvent workMonthCreatedEvent, WorkMonthEntity workMonthEntity) {
         assertEquals(workMonthCreatedEvent.userId().id(), workMonthEntity.getUserId());
-        assertEquals(workMonthCreatedEvent.yearMonth(), workMonthEntity.getDate());
+        assertEquals(workMonthCreatedEvent.yearMonth(), YearMonth.of(workMonthEntity.getYearMonth().getYear(), workMonthEntity.getYearMonth().getMonth()));
         assertEquals(workMonthCreatedEvent.totalHours().hours(), workMonthEntity.getTotalHours().getHours());
         assertEquals(workMonthCreatedEvent.totalHours().minutes(), workMonthEntity.getTotalHours().getMinutes());
         assertEquals(workMonthCreatedEvent.workDays().size(), workMonthEntity.getWorkDays().size());

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -25,10 +26,11 @@ class WorkMonthCreatedHandler implements DomainEventHandler<WorkMonthCreatedEven
                     .collect(Collectors.toSet());
 
         final WorkHour workHour = workMonthCreatedEvent.totalHours();
+        final YearMonth yearMonth = workMonthCreatedEvent.yearMonth();
         final WorkMonthEntity workMonthEntity = WorkMonthEntity.builder()
                 .id(workMonthCreatedEvent.aggregateId())
                 .userId(workMonthCreatedEvent.userId().id())
-                .date(workMonthCreatedEvent.yearMonth())
+                .yearMonth(new YearMonthEntity(yearMonth.getYear(), yearMonth.getMonth().getValue()))
                 .totalHours(WorkHourEntity.builder().hours(workHour.hours()).minutes(workHour.minutes()).build())
                 .workDays(workDays)
                 .build();

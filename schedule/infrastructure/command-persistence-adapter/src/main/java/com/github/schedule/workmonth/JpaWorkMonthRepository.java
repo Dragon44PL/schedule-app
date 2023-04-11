@@ -13,19 +13,19 @@ import java.util.UUID;
 class JpaWorkMonthRepository implements WorkMonthRepository {
 
     private final WorkMonthEntityRepository workMonthEntityRepository;
-    private final PersistenceWorkMonthHandler persistenceWorkMonthHandler;
+    private final WorkMonthEventHandler workMonthEventHandler;
 
     public Optional<WorkMonth> findById(UUID uuid) {
-        Optional<WorkMonthEntity> workMonthEntity = workMonthEntityRepository.findById(uuid);
+        final Optional<WorkMonthEntity> workMonthEntity = workMonthEntityRepository.findById(uuid);
         return workMonthEntity.map(WorkMonthEntityConverter::convertWorkMonth);
     }
 
     public void save(WorkMonth workMonth) {
-        workMonth.events().forEach(persistenceWorkMonthHandler::handle);
+        workMonth.events().forEach(workMonthEventHandler::handle);
     }
 
     public Optional<WorkMonth> findByUser(UserId userId, YearMonth yearMonth) {
-        Optional<WorkMonthEntity> workMonthEntity = workMonthEntityRepository.findByUserIdAndDate(userId.id(), yearMonth);
+        final Optional<WorkMonthEntity> workMonthEntity = workMonthEntityRepository.findByUserIdAndYearMonth(userId.id(), new YearMonthEntity(yearMonth.getYear(), yearMonth.getMonthValue()));
         return workMonthEntity.map(WorkMonthEntityConverter::convertWorkMonth);
     }
 }

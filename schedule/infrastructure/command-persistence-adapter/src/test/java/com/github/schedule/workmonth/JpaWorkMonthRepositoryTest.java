@@ -36,7 +36,7 @@ class JpaWorkMonthRepositoryTest {
 
     private static WorkMonthEntityRepository workMonthEntityRepository;
 
-    private static PersistenceWorkMonthHandler workMonthHandler;
+    private static WorkMonthEventHandler workMonthHandler;
 
     private static JpaWorkMonthRepository workMonthRepository;
 
@@ -46,14 +46,14 @@ class JpaWorkMonthRepositoryTest {
         // Creating WorkMonthEntityRepository
         workMonthEntityRepository = Mockito.mock(WorkMonthEntityRepository.class);
         final WorkMonthEntity workMonthEntity = WorkMonthEntity.builder()
-                .id(EXISTS_ID).date(YearMonth.now()).workDays(new HashSet<>())
+                .id(EXISTS_ID).yearMonth(new YearMonthEntity(YearMonth.now().getYear(), YearMonth.now().getMonthValue())).workDays(new HashSet<>())
                 .totalHours(WorkHourEntity.builder().hours(0).minutes(0).build()).build();
 
         when(workMonthEntityRepository.findById(EXISTS_ID)).thenReturn(Optional.of(workMonthEntity));
         when(workMonthEntityRepository.findById(NOT_EXISTS_ID)).thenReturn(Optional.empty());
 
         // Creating WorkMonthHandler
-        workMonthHandler = Mockito.mock(PersistenceWorkMonthHandler.class);
+        workMonthHandler = Mockito.mock(WorkMonthEventHandler.class);
         doNothing().when(workMonthHandler).handle(any());
 
         workMonthRepository = new JpaWorkMonthRepository(workMonthEntityRepository, workMonthHandler);
