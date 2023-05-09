@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class WorkMonthQueryEndpointTest extends BaseEndpointTest {
 
     @MockBean
-    private WorkMonthQuery jpaWorkMonthQuery;
+    private WorkMonthQueryRepository jpaWorkMonthQuery;
 
     /*
         Data

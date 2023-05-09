@@ -1,7 +1,7 @@
-package com.github.schedule.workmonth.converter;
+package com.github.schedule.workmonth.dto.request;
 
-import com.github.schedule.workmonth.command.WorkDaysChangeCommand;
-import com.github.schedule.workmonth.command.WorkMonthCreateCommand;
+import com.github.schedule.workmonth.dto.WorkDaysChangeCommand;
+import com.github.schedule.workmonth.dto.WorkMonthCreateCommand;
 import com.github.schedule.workmonth.dto.request.workday.WorkDayRequestDto;
 import com.github.schedule.workmonth.dto.request.workday.WorkDaysChangeDto;
 import com.github.schedule.workmonth.dto.request.workday.WorkHourRequestDto;
@@ -9,7 +9,6 @@ import com.github.schedule.workmonth.dto.request.workmonth.WorkMonthCreateDto;
 import com.github.schedule.workmonth.vo.UserId;
 import com.github.schedule.workmonth.vo.WorkDay;
 import com.github.schedule.workmonth.vo.WorkHour;
-import org.springframework.stereotype.Component;
 
 import java.time.YearMonth;
 import java.util.Set;

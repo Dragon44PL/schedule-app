@@ -1,8 +1,8 @@
 package com.github.schedule.workmonth;
 
-import com.github.schedule.workmonth.command.WorkDaysChangeCommand;
-import com.github.schedule.workmonth.command.WorkMonthCreateCommand;
-import com.github.schedule.workmonth.converter.WorkMonthRequestConverter;
+import com.github.schedule.workmonth.dto.WorkDaysChangeCommand;
+import com.github.schedule.workmonth.dto.WorkMonthCreateCommand;
+import com.github.schedule.workmonth.dto.request.WorkMonthRequestConverter;
 import com.github.schedule.workmonth.dto.request.workday.WorkDaysChangeDto;
 import com.github.schedule.workmonth.dto.request.workmonth.WorkMonthCreateDto;
 import com.github.schedule.workmonth.event.WorkMonthEvent;
